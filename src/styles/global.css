@@ -1,0 +1,36 @@
+/* Estilos comunes para el carrusel */
+.carousel-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  
+  .carousel {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+  }
+  
+  .carousel::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Estilos comunes para las flechas */
+  .carousel-button {
+    z-index: 10;
+    background-color: #E5E7EB; /* bg-gray-200 */
+    color: #4B5563; /* text-gray-600 */
+    padding: 0.75rem; /* p-3 */
+    border-radius: 9999px; /* rounded-full */
+    transition: background-color 0.2s;
+  }
+  
+  .carousel-button:hover {
+    background-color: #D1D5DB; /* hover:bg-gray-300 */
+  }
+  
+  .carousel-button svg {
+    height: 1.5rem; /* h-6 */
+    width: 1.5rem; /* w-6 */
+  }
