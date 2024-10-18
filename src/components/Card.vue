@@ -1,5 +1,8 @@
 <template>
-  <div class="card p-4 border rounded-lg shadow-lg">
+  <div 
+    class="card p-4 border rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition"
+    @click="goToPage"
+  >
     <!-- Imagen -->
     <img :src="imageSrc" alt="Card Image" class="w-full h-48 object-cover mb-4 rounded-lg" />
 
@@ -13,7 +16,8 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
-// Importar la imagen directamente
+import { useRouter } from 'vue-router'; // Importamos Vue Router
+// Importa la imagen local desde la carpeta assets
 import miyoImage from '@/assets/images/miyo.svg';
 
 export default defineComponent({
@@ -30,22 +34,34 @@ export default defineComponent({
     image: {
       type: String,
       default: miyoImage, // Usamos la imagen local como valor por defecto
+    },
+    link: {
+      type: String,
+      required: true,
     }
   },
   setup(props) {
-    // Lógica para cargar la imagen, ya sea la prop o el valor por defecto
+    const router = useRouter(); // Usamos Vue Router
+
+    // Lógica para cargar la imagen desde las props o usar la imagen por defecto
     const imageSrc = computed(() => props.image || miyoImage);
 
     // Lógica para truncar la descripción si supera los 50 caracteres
     const truncatedDescription = computed(() => {
-      return props.description.length > 160
-        ? props.description.slice(0, 160) + '...'
+      return props.description.length > 50
+        ? props.description.slice(0, 50) + '...'
         : props.description;
     });
 
+    // Función para navegar a la página especificada
+    const goToPage = () => {
+      router.push(props.link); // Navega a la ruta especificada
+    };
+
     return {
       truncatedDescription,
-      imageSrc
+      imageSrc,
+      goToPage
     };
   }
 });
