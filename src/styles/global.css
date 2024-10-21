@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Estilos comunes para el carrusel */
 .carousel-wrapper {
     position: relative;

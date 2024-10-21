@@ -1,5 +1,5 @@
 <template>
-  <div class="landing-page container mx-auto p-4">
+  <div class="discovery-page container mx-auto p-4">
     <!-- Sección 1 con el componente Carousel -->
     <section class="section my-8">
       <h2 class="text-2xl font-bold mb-4">Sección 1 - Carrusel</h2>
@@ -22,11 +22,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Carousel from '../components/Carousel.vue';
-import Card from '../components/Card.vue';
+import Carousel from '../common/components/Carousel.vue';
+import Card from './journey/JourneyCard.vue';
 
 export default defineComponent({
-  name: 'LandingPage',
+  name: 'DiscoveryPage',
   components: { Carousel, Card },
   data() {
     return {

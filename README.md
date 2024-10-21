@@ -1,5 +1,44 @@
-# Vue 3 + TypeScript + Vite
+# Proyecto Miyo
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+<img src="./src/assets/images/logo-miyo.png" alt="Logo del Proyecto" width="200"/>
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+Este es un proyecto de frontend basado en **Vue 3**, **TypeScript** y **Vite**, utilizando **TailwindCSS** para el diseño y estilos. La aplicación está preparada para escalar y agregar más funcionalidades conforme crezca el proyecto.
+
+## Herramientas utilizadas
+
+- **Vue 3**: Framework progresivo de JavaScript.
+- **TypeScript**: Tipado estático para JavaScript.
+- **Vite**: Herramienta rápida de desarrollo y construcción.
+- **TailwindCSS**: Framework de utilidades CSS para diseño.
+
+## Instalación
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/ElianaHuamani/miyo.git
+
+2. Instala las dependencias:
+   ```bash
+   npm install
+
+3. Ejecuta el servidor de desarrollo:
+   ```bash
+   npm run dev
+
+4. Para compilar el proyecto para producción:
+   ```bash
+   npm run build
+
+## Estructura del Proyecto
+
+    src/: Contiene todo el código fuente.
+        components/: Componentes Vue.
+        assets/: Recursos estáticos como imágenes y estilos.
+        services/: Lógica y servicios de la aplicación.
+        styles/: Configuración de TailwindCSS.
+    public/: Archivos estáticos públicos.
+    vite.config.ts: Configuración de Vite.
+
+## Contribuciones
+
+Las contribuciones son bienvenidas. Crea un Pull Request para proponer mejoras o correcciones.

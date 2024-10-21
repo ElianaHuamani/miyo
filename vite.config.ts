@@ -8,4 +8,7 @@ export default defineConfig({
       '@': '/src',  // Aquí es donde se define que `@` apunta a `src/`
     },
   },
+  css: {
+    postcss: './postcss.config.js',
+  },
 });
