@@ -17,7 +17,6 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { useRouter } from 'vue-router'; // Importamos Vue Router
-// Importa la imagen local desde la carpeta assets
 import miyoImage from '@/assets/images/miyo.svg';
 
 export default defineComponent({
@@ -33,7 +32,7 @@ export default defineComponent({
     },
     image: {
       type: String,
-      default: miyoImage, // Usamos la imagen local como valor por defecto
+      default: miyoImage,
     },
     link: {
       type: String,
@@ -46,10 +45,10 @@ export default defineComponent({
     // Lógica para cargar la imagen desde las props o usar la imagen por defecto
     const imageSrc = computed(() => props.image || miyoImage);
 
-    // Lógica para truncar la descripción si supera los 50 caracteres
+    // Lógica para truncar la descripción si supera los 100 caracteres
     const truncatedDescription = computed(() => {
-      return props.description.length > 50
-        ? props.description.slice(0, 50) + '...'
+      return props.description.length > 100
+        ? props.description.slice(0, 100) + '...'
         : props.description;
     });
 

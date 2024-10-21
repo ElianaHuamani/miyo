@@ -21,35 +21,37 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import Carousel from '../common/components/Carousel.vue';
 import Card from './journey/JourneyCard.vue';
-
+import { section1CardsMock } from '../mocks/DiscoveryCardsMock'; // Importamos los datos del mock
+import { type JourneyCard } from '../services/backend/journeycard.ts';
 export default defineComponent({
   name: 'DiscoveryPage',
-  components: { Carousel, Card },
-  data() {
+  components: {
+    Carousel,
+    Card
+  },
+  setup() {
+    // Creamos una referencia para los datos que serán cargados
+    const section1Cards = ref<JourneyCard[]>([]);
+
+    // Función simulando una llamada a una API con Promise
+    const fetchSection1Cards = async (): Promise<JourneyCard[]> => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve(section1CardsMock);
+        }, 500);
+      });
+    };
+
+    // Llamada simulada a la "API" cuando el componente se monta
+    onMounted(async () => {
+      section1Cards.value = await fetchSection1Cards(); // Asignamos los datos obtenidos
+    });
+
     return {
-      section1Cards: [
-        { 
-          title: 'Submenú 1', 
-          description: 'Esta es una descripción que no supera los 50 caracteres.', 
-          image: '', // Si está vacío, se usará la imagen local por defecto
-          link: '/pagina1'
-        },
-        { 
-          title: 'Submenú 2', 
-          description: 'Descripción un poco más larga que debería truncarse a los 50 caracteres para no mostrar demasiado contenido.', 
-          image: '', // Si está vacío, se usará la imagen local por defecto
-          link: '/pagina2'
-        },
-        { 
-          title: 'Submenú 3', 
-          description: 'Descripción corta.', 
-          image: '', // Si está vacío, se usará la imagen local por defecto
-          link: '/pagina3'
-        }
-      ]
+      section1Cards
     };
   }
 });
