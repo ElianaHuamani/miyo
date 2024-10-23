@@ -9,7 +9,7 @@
     <!-- Título -->
     <h3 class="text-xl font-semibold mb-2">{{ title }}</h3>
 
-    <!-- Descripción (truncada si supera los 50 caracteres) -->
+    <!-- Descripción (truncada si supera los 100 caracteres) -->
     <p class="text-gray-600">{{ truncatedDescription }}</p>
   </div>
 </template>
@@ -37,6 +37,10 @@ export default defineComponent({
     link: {
       type: String,
       required: true,
+    },
+    isActive: {
+      type: Boolean,
+      required: true,
     }
   },
   setup(props) {
@@ -54,7 +58,9 @@ export default defineComponent({
 
     // Función para navegar a la página especificada
     const goToPage = () => {
-      router.push(props.link); // Navega a la ruta especificada
+      if (props.isActive) {
+        router.push(props.link); // Navega a la ruta especificada
+      }
     };
 
     return {

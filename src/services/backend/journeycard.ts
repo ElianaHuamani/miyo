@@ -3,4 +3,5 @@ export interface JourneyCard {
     description: string;
     image: string;
     link: string;
+    isActive: boolean;
 }
