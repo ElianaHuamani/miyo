@@ -19,8 +19,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import podcastImage from '@/assets/images/miyo.svg';
-import podcastAudio from '@/assets/audio/sample.mp3'; // Importa el archivo MP3
+import podcastImage from '@/assets/images/journey-finanzas-personales.svg';
+import podcastAudio from '@/assets/audio/sample.mp3';
 
 export default defineComponent({
   name: 'PodcastPlayerPage',
