@@ -6,8 +6,23 @@
     <!-- Imagen -->
     <img :src="imageSrc" alt="Card Image" class="w-full h-48 object-cover mb-4 rounded-lg" />
 
-    <!-- Título -->
-    <h3 class="text-xl font-semibold mb-2">{{ title }}</h3>
+    <!-- Título con ícono de audífono alineado a la derecha -->
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="text-xl font-semibold">{{ title }}</h3>
+      <!-- Icono de audífono con tamaño fijo -->
+      <div class="flex-shrink-0 ml-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          class="w-6 h-6 text-gray-500"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 1C6.486 1 2 5.486 2 11v7c0 2.206 1.794 4 4 4h2c1.103 0 2-.897 2-2v-5c0-1.103-.897-2-2-2H5v-3c0-4.411 3.589-8 8-8s8 3.589 8 8v3h-3c-1.103 0-2 .897-2 2v5c0 1.103.897 2 2 2h2c2.206 0 4-1.794 4-4v-7c0-5.514-4.486-10-10-10z"
+          />
+        </svg>
+      </div>
+    </div>
 
     <!-- Descripción (truncada si supera los 100 caracteres) -->
     <p class="text-gray-600">{{ truncatedDescription }}</p>
