@@ -1,119 +1,210 @@
 <template>
-    <div class="journey-wrapper">
-      <h1 class="text-center text-2xl mb-6">Ruta de Aprendizaje</h1>
-  
-      <div class="steps-container">
-        <!-- Nodos del camino -->
-        <div v-for="(step, index) in steps" :key="index" class="step-item">
-          <!-- Nodo -->
-          <div class="step-wrapper">
-            <div :class="['step', step.completed ? 'completed' : '']" @click="goToStep(step.link)">
-              <span v-if="step.completed" class="icon">✓</span>
-              <span v-else class="icon">{{ index + 1 }}</span>
-            </div>
-            <p class="step-title">{{ step.title }}</p>
-          </div>
+  <div class="journey-wrapper">
+    <div class="header">
+      <!-- Enlace de Back con el símbolo de retroceso -->
+      <a @click.prevent="goBack" href="#" class="back-link">
+        <span class="back-icon"> < </span> Back
+      </a>
+      <!-- Título central del journey -->
+      <h1 class="title">{{ journeyData.journey }}</h1>
+    </div>
+
+    <div class="modules-container">
+      <!-- Módulos -->
+      <div v-for="(module, moduleIndex) in journeyData.modules" :key="moduleIndex" class="module">
+        <!-- Línea divisoria con el título del módulo -->
+        <div class="module-divider">
+          <span class="module-title">{{ module.title }}</span>
         </div>
+
+        <!-- Podcasts en zigzag de cada módulo -->
+        <div v-for="(podcast, podcastIndex) in module.podcasts" 
+          :key="podcastIndex" 
+          class="podcast-item" 
+          :class="{'zigzag-left': podcastIndex % 2 === 0, 'zigzag-right': podcastIndex % 2 !== 0}">
+          <div 
+            :class="['podcast-circle', getPodcastClass(podcast.podcastStage)]" 
+            @click="handlePodcastClick(podcast, podcastIndex, moduleIndex)">
+            <img v-if="podcast.podcastStage === 'disabled'" :src="iconBlock" alt="Blocked Icon" />
+            <img v-if="podcast.podcastStage === 'enabled'" :src="iconPlay" alt="Play Icon" />
+            <img v-if="podcast.podcastStage === 'completed'" :src="iconStar" alt="Star Icon" />
+          </div>
+      </div>
+
       </div>
     </div>
-  </template>
-  
-  <script lang="ts">
-  import { defineComponent, ref } from 'vue';
-  import { Step } from '../services/backend/step';
-  
-  export default defineComponent({
-    name: 'JourneyPage',
-    setup() {
-      // Datos para los pasos
-      const steps = ref<Step[]>([
-        { title: 'Lección 1', completed: true, link: '/leccion1' },
-        { title: 'Lección 2', completed: false, link: '/leccion2' },
-        { title: 'Lección 3', completed: false, link: '/leccion3' },
-        { title: 'Lección 4', completed: false, link: '/leccion4' }
-      ]);
-  
-      const goToStep = (link: string) => {
-        window.location.href = link;
-      };
-  
-      return {
-        steps,
-        goToStep
-      };
-    }
-  });
-  </script>
-  
-  <style scoped>
-  .journey-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    width: 100%;
-  }
-  
-  .steps-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4rem;
-    position: relative;
-  }
-  
-  .step-item {
-    display: flex;
-    position: relative;
-    justify-content: center;
-  }
-  
-  .step-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-  
-  .step {
-    width: 80px;
-    height: 80px;
-    background-color: #fff;
-    border: 3px solid #ccc;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-    z-index: 2;
-  }
-  
-  .step.completed {
-    background-color: #4CAF50;
-    border-color: #4CAF50;
-  }
-  
-  .icon {
-    font-size: 2rem;
-    color: #333;
-  }
-  
-  .step-title {
-    margin-left: 20px;
-    font-size: 1.2rem;
-    color: #333;
-  }
-  
-  .step-item:nth-child(even) .step-wrapper {
-    flex-direction: row-reverse;  /* Alineamos el texto a la derecha del nodo */
-  }
-  
-  .step-item:nth-child(even) .step-title {
-    margin-left: 0;
-    margin-right: 20px;  /* Ajustamos el margen para la alternancia */
-  }
-  </style>
-  
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+import { Journey } from '../services/backend/Journey';
+import { FinanzasJourneyMock } from '../mocks/FinanzasJourneyMock';
+import iconBlock from '@/assets/icons/icono-block.svg';
+import iconStar from '@/assets/icons/icono-start.svg';
+import iconPlay from '@/assets/icons/icono-play.svg';
+
+export default defineComponent({
+  name: 'JourneyPage',
+  setup() {
+    const journeyData = ref<Journey>(FinanzasJourneyMock);
+
+    const getPodcastClass = (stage: string) => {
+      switch (stage) {
+        case 'enabled':
+          return 'enabled';
+        case 'completed':
+          return 'completed';
+        case 'disabled':
+        default:
+          return 'disabled';
+      }
+    };
+
+    const handlePodcastClick = (podcast: any, podcastIndex: number, moduleIndex: number) => {
+      // Verificamos si el podcast está habilitado (enabled)
+      if (podcast.podcastStage === 'enabled') {
+        // Marcamos el podcast como completado
+        podcast.podcastStage = 'completed';
+
+        // Intentamos habilitar el siguiente podcast en el mismo módulo
+        const currentModule = journeyData.value.modules[moduleIndex];
+        const nextPodcast = currentModule.podcasts[podcastIndex + 1];
+
+        if (nextPodcast && nextPodcast.podcastStage === 'disabled') {
+          // Si existe un siguiente podcast en el mismo módulo, lo habilitamos
+          nextPodcast.podcastStage = 'enabled';
+        } else {
+          // Si no hay más podcasts en el módulo actual, habilitamos el primer podcast del siguiente módulo
+          const nextModule = journeyData.value.modules[moduleIndex + 1];
+          if (nextModule && nextModule.podcasts[0].podcastStage === 'disabled') {
+            nextModule.podcasts[0].podcastStage = 'enabled';
+          }
+        }
+      }
+    };
+
+
+    const goBack = () => {
+      window.history.back();
+    };
+
+    return {
+      journeyData,
+      getPodcastClass,
+      handlePodcastClick,
+      goBack,
+      iconBlock,
+      iconStar,
+      iconPlay
+    };
+  },
+});
+</script>
+
+<style scoped>
+.journey-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px 20px;
+  width: 100%;
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.back-link {
+  text-decoration: none;
+  color: #333;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 20px;
+  transition: color 0.3s ease;
+}
+
+.back-link:hover {
+  color: #4CAF50;
+}
+
+.title {
+  font-size: 2.2rem;
+  color: #333;
+  text-align: center;
+  margin: 0 auto;
+  font-weight: 500;
+}
+
+.modules-container {
+  width: 100%;
+  max-width: 700px;
+}
+
+.module-divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3rem 0;
+  position: relative;
+}
+
+.module-divider::before,
+.module-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+
+.module-title {
+  padding: 0 1.5rem;
+  font-size: 1.5rem;
+  color: #666;
+}
+
+/* Diseño en zigzag */
+.podcast-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  position: relative;
+  justify-content: center; /* Centramos los círculos */
+}
+
+.zigzag-left {
+  transform: translateX(-40px); /* Mueve el círculo a la izquierda */
+}
+
+.zigzag-right {
+  transform: translateX(40px); /* Mueve el círculo a la derecha */
+}
+
+.podcast-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: transparent;
+  border: none; /* Retiramos el borde ya que los iconos reemplazan el color */
+}
+
+.podcast-circle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+</style>

@@ -41,7 +41,7 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import Carousel from '../common/components/Carousel.vue';
 import Card from './journey/JourneyCard.vue';
-import { section1CardsMock, section2CardsMock  } from '../mocks/DiscoveryCardsMock'; // Importamos los datos del mock
+import { finanzasSectionMock, crecimientoSectionMock  } from '../mocks/DiscoveryCardsMock'; // Importamos los datos del mock
 import { type JourneyCard } from '../services/backend/journeycard.ts';
 
 export default defineComponent({
@@ -59,7 +59,7 @@ export default defineComponent({
     const fetchSection1Cards = async (): Promise<JourneyCard[]> => {
       return new Promise(resolve => {
         setTimeout(() => {
-          resolve(section1CardsMock);
+          resolve(finanzasSectionMock);
         }, 500);
       });
     };
@@ -67,7 +67,7 @@ export default defineComponent({
     const fetchSection2Cards = async (): Promise<JourneyCard[]> => {
       return new Promise(resolve => {
         setTimeout(() => {
-          resolve(section2CardsMock);
+          resolve(crecimientoSectionMock);
         }, 500);
       });
     };

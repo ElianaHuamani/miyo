@@ -11,7 +11,7 @@ import journeycrecimientoproposito from '@/assets/images/journey-crecimiento-pro
 
 
 
-export const section1CardsMock = [
+export const finanzasSectionMock = [
     { 
       title: 'Finanzas Personales', 
       description: '¿Te gustaría dominar tus finanzas, pero no tienes tiempo para leer libros o tomar clases largas? ¡Este curso es para ti! En Finanzas en Claro, aprenderás a gestionar tu dinero de forma sencilla, práctica y entretenida, a través de episodios cortos y dinámicos.', 
@@ -42,7 +42,7 @@ export const section1CardsMock = [
     }
   ];
 
-  export const section2CardsMock = [
+  export const crecimientoSectionMock = [
     { 
       title: 'Autoconocimiento y gestión emocional', 
       description: '🌿❤️ Entenderte a ti mismo es clave para una vida equilibrada. Aprende a gestionar tus emociones, a conocerte mejor y a construir una versión más fuerte y serena de ti. ¡Haz las paces contigo mismo y empieza a florecer! 🌱', 

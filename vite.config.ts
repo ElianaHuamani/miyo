@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': '/src',  // Aquí es donde se define que `@` apunta a `src/`
+      '@': '/src',
     },
   },
   css: {
