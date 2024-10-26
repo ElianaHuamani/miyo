@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { Journey } from '../services/backend/Journey';
+import { IJourney } from '../services/backend/IJourney';
 import { FinanzasJourneyMock } from '../mocks/FinanzasJourneyMock';
 import iconBlock from '@/assets/icons/icono-block.svg';
 import iconStar from '@/assets/icons/icono-start.svg';
@@ -42,7 +42,7 @@ import iconPlay from '@/assets/icons/icono-play.svg';
 export default defineComponent({
   name: 'JourneyPage',
   setup() {
-    const journeyData = ref<Journey>(FinanzasJourneyMock);
+    const journeyData = ref<IJourney>(FinanzasJourneyMock);
 
     const getPodcastClass = (stage: string) => {
       switch (stage) {

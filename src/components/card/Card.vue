@@ -6,33 +6,19 @@
     <!-- Imagen -->
     <img :src="imageSrc" alt="Card Image" class="w-full h-48 object-cover mb-4 rounded-lg" />
 
-    <!-- Título con ícono de audífono alineado a la derecha -->
+    <!-- Título -->
     <div class="flex justify-between items-center mb-2">
       <h3 class="text-xl font-semibold">{{ title }}</h3>
-      <!-- Icono de audífono con tamaño fijo -->
-      <div class="flex-shrink-0 ml-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          class="w-6 h-6 text-gray-500"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M12 1C6.486 1 2 5.486 2 11v7c0 2.206 1.794 4 4 4h2c1.103 0 2-.897 2-2v-5c0-1.103-.897-2-2-2H5v-3c0-4.411 3.589-8 8-8s8 3.589 8 8v3h-3c-1.103 0-2 .897-2 2v5c0 1.103.897 2 2 2h2c2.206 0 4-1.794 4-4v-7c0-5.514-4.486-10-10-10z"
-          />
-        </svg>
-      </div>
     </div>
 
-    <!-- Descripción (truncada si supera los 100 caracteres) -->
+    <!-- Descripción (Logica de truncar si supera los 100 caracteres) -->
     <p class="text-gray-600">{{ truncatedDescription }}</p>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
-import { useRouter } from 'vue-router'; // Importamos Vue Router
-import miyoImage from '@/assets/images/miyo.svg';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'Card',
@@ -47,7 +33,7 @@ export default defineComponent({
     },
     image: {
       type: String,
-      default: miyoImage,
+      required: true,
     },
     link: {
       type: String,
@@ -62,7 +48,7 @@ export default defineComponent({
     const router = useRouter(); // Usamos Vue Router
 
     // Lógica para cargar la imagen desde las props o usar la imagen por defecto
-    const imageSrc = computed(() => props.image || miyoImage);
+    const imageSrc = computed(() => props.image);
 
     // Lógica para truncar la descripción si supera los 100 caracteres
     const truncatedDescription = computed(() => {

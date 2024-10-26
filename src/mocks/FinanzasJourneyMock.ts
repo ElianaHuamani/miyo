@@ -1,4 +1,4 @@
-import { Journey } from '../services/backend/Journey';
+import { Journey } from '../services/backend/IJourney';
 
 export const FinanzasJourneyMock: Journey = {
   journey: 'Finanzas Personales',

@@ -1,4 +1,4 @@
-export interface JourneyCard {
+export interface ICard {
     title: string;
     description: string;
     image: string;

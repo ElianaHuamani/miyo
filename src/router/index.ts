@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import DiscoveryPage from '../components/DiscoveryPage.vue';
+import DiscoveryPage from '../pages/DiscoveryPage.vue';
 //import Pagina1 from '../pages/Pagina1.vue';
 import Pagina2 from '../pages/Pagina2.vue';
 import Pagina3 from '../pages/Pagina3.vue';

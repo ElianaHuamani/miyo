@@ -40,9 +40,9 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import Carousel from '../common/components/Carousel.vue';
-import Card from './journey/JourneyCard.vue';
-import { finanzasSectionMock, crecimientoSectionMock  } from '../mocks/DiscoveryCardsMock'; // Importamos los datos del mock
-import { type JourneyCard } from '../services/backend/journeycard.ts';
+import Card from '../components/card/Card.vue';
+import { finanzasSectionMock, crecimientoSectionMock  } from '../mocks/DiscoveryCardsMock.ts';
+import { type ICard } from '../services/backend/ICard.ts';
 
 export default defineComponent({
   name: 'DiscoveryPage',
@@ -52,11 +52,11 @@ export default defineComponent({
   },
   setup() {
     // Creamos una referencia para los datos que serán cargados
-    const section1Cards = ref<JourneyCard[]>([]);
-    const section2Cards = ref<JourneyCard[]>([]);
+    const section1Cards = ref<ICard[]>([]);
+    const section2Cards = ref<ICard[]>([]);
 
     // Función simulando una llamada a una API con Promise
-    const fetchSection1Cards = async (): Promise<JourneyCard[]> => {
+    const fetchSection1Cards = async (): Promise<ICard[]> => {
       return new Promise(resolve => {
         setTimeout(() => {
           resolve(finanzasSectionMock);
@@ -64,7 +64,7 @@ export default defineComponent({
       });
     };
 
-    const fetchSection2Cards = async (): Promise<JourneyCard[]> => {
+    const fetchSection2Cards = async (): Promise<ICard[]> => {
       return new Promise(resolve => {
         setTimeout(() => {
           resolve(crecimientoSectionMock);
@@ -74,7 +74,7 @@ export default defineComponent({
 
     // Llamada simulada a la "API" cuando el componente se monta
     onMounted(async () => {
-      section1Cards.value = await fetchSection1Cards(); // Asignamos los datos obtenidos
+      section1Cards.value = await fetchSection1Cards();
       section2Cards.value = await fetchSection2Cards();
     });
 
