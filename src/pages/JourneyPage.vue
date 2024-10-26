@@ -1,23 +1,20 @@
 <template>
-  <div class="journey-wrapper px-4 py-6 md:px-10">
+  <div v-if="isLoading" class="loading-spinner">Cargando...</div>
+  <div v-else class="journey-wrapper px-4 py-6 md:px-10">
     <div class="header relative w-full">
-      <!-- Título central del journey -->
-      <h1 class="title text-2xl md:text-3xl text-center">{{ journeyData.journey }}</h1>
+      <h1 class="title text-2xl md:text-3xl text-center">{{ journeyData?.journey }}</h1>
     </div>
 
     <div class="modules-container max-w-lg mx-auto mt-6">
-      <!-- Módulos -->
-      <div v-for="(module, moduleIndex) in journeyData.modules" :key="moduleIndex" class="module">
-        <!-- Línea divisoria con el título del módulo -->
+      <div v-for="(module, moduleIndex) in journeyData?.modules" :key="moduleIndex" class="module">
         <div class="module-divider flex items-center justify-center my-4 relative">
           <span class="module-title text-sm md:text-lg px-2 bg-white z-10">{{ module.title }}</span>
-          <div class="absolute left-0 right-0 h-px bg-gray-300"></div> <!-- Líneas que cruzan el título -->
+          <div class="absolute left-0 right-0 h-px bg-gray-300"></div>
         </div>
 
-        <!-- Podcasts en zigzag de cada módulo -->
         <div v-for="(podcast, podcastIndex) in module.podcasts" 
-        :key="podcastIndex" class="podcast-item flex justify-center mb-4"
-        :class="{'zigzag-left': podcastIndex % 2 === 0, 'zigzag-right': podcastIndex % 2 !== 0}">
+          :key="podcastIndex" class="podcast-item flex justify-center mb-4"
+          :class="{'zigzag-left': podcastIndex % 2 === 0, 'zigzag-right': podcastIndex % 2 !== 0}">
           <div 
             :class="['podcast-circle', getPodcastClass(podcast.podcastStage)]" 
             @click="handlePodcastClick(podcast, podcastIndex, moduleIndex)">
@@ -32,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import { IJourney } from '../services/backend/IJourney';
 import { FinanzasJourneyMock } from '../mocks/FinanzasJourneyMock';
 import iconBlock from '@/assets/icons/icono-block.svg';
@@ -42,7 +39,20 @@ import iconPlay from '@/assets/icons/icono-play.svg';
 export default defineComponent({
   name: 'JourneyPage',
   setup() {
-    const journeyData = ref<IJourney>(FinanzasJourneyMock);
+    const journeyData = ref<IJourney | null>(null);
+    const isLoading = ref(false); // No hay carga si es el mock
+    const useMockData = true;
+
+    const fetchJourneyData = async () => {
+      if (useMockData) {
+        journeyData.value = FinanzasJourneyMock;
+      } else {
+        isLoading.value = true;
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulación de carga
+        journeyData.value = FinanzasJourneyMock;
+        isLoading.value = false;
+      }
+    };
 
     const getPodcastClass = (stage: string) => {
       switch (stage) {
@@ -57,21 +67,16 @@ export default defineComponent({
     };
 
     const handlePodcastClick = (podcast: any, podcastIndex: number, moduleIndex: number) => {
-      // Verificamos si el podcast está habilitado (enabled)
       if (podcast.podcastStage === 'enabled') {
-        // Marcamos el podcast como completado
         podcast.podcastStage = 'completed';
 
-        // Intentamos habilitar el siguiente podcast en el mismo módulo
-        const currentModule = journeyData.value.modules[moduleIndex];
-        const nextPodcast = currentModule.podcasts[podcastIndex + 1];
+        const currentModule = journeyData.value?.modules[moduleIndex];
+        const nextPodcast = currentModule?.podcasts[podcastIndex + 1];
 
         if (nextPodcast && nextPodcast.podcastStage === 'disabled') {
-          // Si existe un siguiente podcast en el mismo módulo, lo habilitamos
           nextPodcast.podcastStage = 'enabled';
         } else {
-          // Si no hay más podcasts en el módulo actual, habilitamos el primer podcast del siguiente módulo
-          const nextModule = journeyData.value.modules[moduleIndex + 1];
+          const nextModule = journeyData.value?.modules[moduleIndex + 1];
           if (nextModule && nextModule.podcasts[0].podcastStage === 'disabled') {
             nextModule.podcasts[0].podcastStage = 'enabled';
           }
@@ -79,19 +84,32 @@ export default defineComponent({
       }
     };
 
+    onMounted(() => {
+      fetchJourneyData();
+    });
+
     return {
       journeyData,
+      isLoading,
       getPodcastClass,
       handlePodcastClick,
       iconBlock,
       iconStar,
-      iconPlay
+      iconPlay,
     };
   },
 });
 </script>
 
 <style scoped>
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #333;
+}
+
 .journey-wrapper {
   display: flex;
   flex-direction: column;
