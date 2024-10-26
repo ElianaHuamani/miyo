@@ -1,8 +1,11 @@
 
   export interface IPodcast {
     title: string;
-    order: number;
+    description: string;
+    audioLink: string;
+    imageLink: string;
     podcastStage: PodcastStage;
+    order: number;
   }
 
   export type PodcastStage = 'completed' | 'enabled' | 'disabled';

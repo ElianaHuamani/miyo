@@ -1,17 +1,17 @@
 <template>
   <div class="podcast-player-wrapper">
     <!-- Título del podcast -->
-    <h1 class="podcast-title">{{ podcastTitle }}</h1>
+    <h1 class="podcast-title">{{ title }}</h1>
 
     <!-- Imagen del podcast -->
-    <img :src="podcastImage" alt="Podcast cover" class="podcast-image" />
+    <img :src="imageLink" alt="Podcast cover" class="podcast-image" />
 
     <!-- Descripción del podcast -->
-    <p class="podcast-description">{{ podcastDescription }}</p>
+    <p class="podcast-description">{{ description }}</p>
 
     <!-- Reproductor de audio -->
     <audio controls class="audio-player">
-      <source :src="podcastSource" type="audio/mpeg" />
+      <source :src="audioLink" type="audio/mpeg" />
       Tu navegador no soporta la reproducción de audio.
     </audio>
   </div>
@@ -19,22 +19,22 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import podcastImage from '@/assets/images/journey-finanzas-personales.svg';
-import podcastAudio from '@/assets/audio/sample.mp3';
+import imageLink from '@/assets/images/journey-finanzas-personales.svg';
+import audioSource from '@/assets/audio/sample.mp3';
 
 export default defineComponent({
   name: 'PodcastPlayerPage',
   setup() {
     // Datos del podcast
-    const podcastTitle = ref('Finanzas');
-    const podcastDescription = ref('Breve descripción del episodio del podcast.');
-    const podcastSource = ref(podcastAudio); // Asigna el archivo MP3 importado como fuente
+    const title = ref('Finanzas');
+    const description = ref('Breve descripción del episodio del podcast.');
+    const audioLink = ref(audioSource); // Asigna el archivo MP3 importado como fuente
 
     return {
-      podcastTitle,
-      podcastDescription,
-      podcastSource,
-      podcastImage // Usamos la imagen importada
+      title,
+      description,
+      audioLink,
+      imageLink
     };
   }
 });

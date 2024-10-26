@@ -1,4 +1,3 @@
-// Datos simulados (mock) para las tarjetas de la sección
 import journeyfinanzaspersonales from '@/assets/images/journey-finanzas-personales.svg';
 import journeyfinanzasinveriones from '@/assets/images/journey-finanzas-inveriones.svg';
 import journeyfinanzasplanificacion from '@/assets/images/journey-finanzas-planificacion.svg';
@@ -9,14 +8,12 @@ import journeycrecimientohabitos from '@/assets/images/journey-crecimiento-habit
 import journeycrecimientomentalidad from '@/assets/images/journey-crecimiento-mentalidad.svg';
 import journeycrecimientoproposito from '@/assets/images/journey-crecimiento-proposito.svg';
 
-
-
 export const finanzasSectionMock = [
     { 
       title: 'Finanzas Personales', 
       description: '¿Te gustaría dominar tus finanzas, pero no tienes tiempo para leer libros o tomar clases largas? ¡Este curso es para ti! En Finanzas en Claro, aprenderás a gestionar tu dinero de forma sencilla, práctica y entretenida, a través de episodios cortos y dinámicos.', 
       image: journeyfinanzaspersonales, 
-      link: '/pagina1',
+      link: '/journey',
       isActive: true,
     },
     {
