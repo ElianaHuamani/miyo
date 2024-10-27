@@ -76,6 +76,7 @@ export default defineComponent({
     onMounted(async () => {
       section1Cards.value = await fetchSection1Cards();
       section2Cards.value = await fetchSection2Cards();
+      localStorage.removeItem('podcastProgress');
     });
 
     return {

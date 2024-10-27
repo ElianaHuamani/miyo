@@ -17,7 +17,7 @@
           :class="{'zigzag-left': podcastIndex % 2 === 0, 'zigzag-right': podcastIndex % 2 !== 0}">
           <div 
             :class="['podcast-circle', getPodcastClass(podcast.podcastStage)]" 
-            @click="handlePodcastClick(podcast, podcastIndex, moduleIndex)">
+            @click="handlePodcastClick(podcast, moduleIndex, podcastIndex)">
             <img v-if="podcast.podcastStage === 'disabled'" :src="iconBlock" alt="Blocked Icon" />
             <img v-if="podcast.podcastStage === 'enabled'" :src="iconPlay" alt="Play Icon" />
             <img v-if="podcast.podcastStage === 'completed'" :src="iconStar" alt="Star Icon" />
@@ -30,6 +30,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { IJourney } from '../services/backend/IJourney';
 import { FinanzasJourneyMock } from '../mocks/FinanzasJourneyMock';
 import iconBlock from '@/assets/icons/icono-block.svg';
@@ -39,19 +40,60 @@ import iconPlay from '@/assets/icons/icono-play.svg';
 export default defineComponent({
   name: 'JourneyPage',
   setup() {
-    const journeyData = ref<IJourney | null>(null);
-    const isLoading = ref(false); // No hay carga si es el mock
-    const useMockData = true;
+    const journeyData = ref<IJourney>(JSON.parse(JSON.stringify(FinanzasJourneyMock)));
+    const isLoading = ref(false);
+    const router = useRouter();
+    const useMockData = true; // Cambiar a `false` para simular una llamada a la API
 
-    const fetchJourneyData = async () => {
-      if (useMockData) {
-        journeyData.value = FinanzasJourneyMock;
-      } else {
-        isLoading.value = true;
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulación de carga
-        journeyData.value = FinanzasJourneyMock;
-        isLoading.value = false;
+    // Inicializa solo una vez si no existe en `localStorage`
+    const initializeProgress = () => {
+      if (!localStorage.getItem('podcastProgress')) {
+        const initialProgress = {
+          modules: journeyData.value.modules.map((module, moduleIndex) => ({
+            title: module.title,
+            podcasts: module.podcasts.map((podcast, podcastIndex) => ({
+              title: podcast.title,
+              description: podcast.description,
+              audioLink: podcast.audioLink,
+              imageLink: podcast.imageLink,
+              completed: false,
+              // Solo habilitar el primer podcast del primer módulo
+              podcastStage: moduleIndex === 0 && podcastIndex === 0 ? 'enabled' : 'disabled',
+            })),
+          })),
+        };
+        localStorage.setItem('podcastProgress', JSON.stringify(initialProgress));
       }
+    };
+
+    // Carga el progreso guardado en `localStorage` y lo aplica directamente a `journeyData`
+    const applyProgress = () => {
+      const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
+      savedProgress.modules?.forEach((savedModule: any, moduleIndex: number) => {
+        savedModule.podcasts.forEach((savedPodcast: any, podcastIndex: number) => {
+          journeyData.value.modules[moduleIndex].podcasts[podcastIndex].podcastStage = savedPodcast.podcastStage;
+        });
+      });
+    };
+
+    // Configuración de carga condicional con simulación de API
+    const fetchJourneyData = async () => {
+      isLoading.value = true;
+      if (useMockData) {
+        journeyData.value = JSON.parse(JSON.stringify(FinanzasJourneyMock));
+      } else {
+        // Simulación de una llamada a la API
+        try {
+          const response = await fetch('https://api.example.com/journey'); // Cambiar URL a la de tu API
+          if (!response.ok) throw new Error('Error al obtener los datos');
+          journeyData.value = await response.json();
+        } catch (error) {
+          console.error('Error en la llamada a la API:', error);
+          journeyData.value = FinanzasJourneyMock; // Fallback en caso de error
+        }
+      }
+      isLoading.value = false;
+      applyProgress();
     };
 
     const getPodcastClass = (stage: string) => {
@@ -66,26 +108,25 @@ export default defineComponent({
       }
     };
 
-    const handlePodcastClick = (podcast: any, podcastIndex: number, moduleIndex: number) => {
+    const handlePodcastClick = (podcast: any, moduleIndex: number, podcastIndex: number) => {
       if (podcast.podcastStage === 'enabled') {
-        podcast.podcastStage = 'completed';
-
-        const currentModule = journeyData.value?.modules[moduleIndex];
-        const nextPodcast = currentModule?.podcasts[podcastIndex + 1];
-
-        if (nextPodcast && nextPodcast.podcastStage === 'disabled') {
-          nextPodcast.podcastStage = 'enabled';
-        } else {
-          const nextModule = journeyData.value?.modules[moduleIndex + 1];
-          if (nextModule && nextModule.podcasts[0].podcastStage === 'disabled') {
-            nextModule.podcasts[0].podcastStage = 'enabled';
-          }
-        }
+        router.push({
+          path: '/podcast',
+          query: {
+            title: podcast.title,
+            description: podcast.description,
+            audioLink: podcast.audioLink,
+            imageLink: podcast.imageLink,
+            moduleIndex: moduleIndex.toString(),
+            podcastIndex: podcastIndex.toString(),
+          },
+        });
       }
     };
 
     onMounted(() => {
-      fetchJourneyData();
+      initializeProgress();
+      fetchJourneyData(); // Ejecuta fetch solo una vez después de inicializar
     });
 
     return {
