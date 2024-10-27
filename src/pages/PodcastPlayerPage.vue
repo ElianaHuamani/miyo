@@ -1,8 +1,8 @@
 <template>
   <div class="podcast-player-wrapper">
-    <h1 class="podcast-title">{{ title }}</h1>
+    <br><br>
     <img :src="imageLink" alt="Podcast cover" class="podcast-image" />
-    <p class="description">{{ description }}</p>
+    <p class="description">{{ description }}</p><br>
     <audio controls ref="audioElement" class="audio-player">
       <source :src="audioLink" type="audio/mpeg" />
       Tu navegador no soporta la reproducción de audio.
