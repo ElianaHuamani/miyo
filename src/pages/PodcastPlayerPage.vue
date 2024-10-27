@@ -73,10 +73,28 @@ export default defineComponent({
       }
     };
 
+
     const markPodcastCompleted = () => {
       const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
+      
+      // Marca el podcast actual como completado
       savedProgress.modules[moduleIndex.value].podcasts[podcastIndex.value].completed = true;
       savedProgress.modules[moduleIndex.value].podcasts[podcastIndex.value].podcastStage = 'completed';
+
+      // Habilita el siguiente podcast
+      const nextPodcast = savedProgress.modules[moduleIndex.value].podcasts[podcastIndex.value + 1];
+      
+      if (nextPodcast && nextPodcast.podcastStage === 'disabled') {
+        nextPodcast.podcastStage = 'enabled';
+      } else {
+        // Si no hay un siguiente podcast en el módulo actual, habilita el primero del siguiente módulo
+        const nextModule = savedProgress.modules[moduleIndex.value + 1];
+        if (nextModule && nextModule.podcasts[0].podcastStage === 'disabled') {
+          nextModule.podcasts[0].podcastStage = 'enabled';
+        }
+      }
+
+      // Guarda el progreso actualizado en localStorage
       localStorage.setItem('podcastProgress', JSON.stringify(savedProgress));
     };
 
