@@ -167,15 +167,15 @@ export default defineComponent({
   justify-content: center;
   position: relative;
   width: 100%;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
 }
 
 .title {
-  font-size: 2.2rem;
-  color: #333;
+  font-size: 1.8rem;
+  color: #afafaf;
   text-align: center;
   margin: 0 auto;
-  font-weight: 500;
+  font-weight: 800;
 }
 
 .modules-container {
@@ -203,7 +203,8 @@ export default defineComponent({
   position: relative;
   z-index: 10;
   font-size: 1rem;
-  color: #666;
+  color: #afafaf;
+  font-weight: 500;
 }
 
 /* Diseño en zigzag */
