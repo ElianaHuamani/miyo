@@ -1,6 +1,10 @@
 <template>
   <div class="podcast-player-wrapper">
     <br><br>
+    <p class="current-position">
+      Módulo {{ moduleIndex + 1 }} - Podcast {{ podcastIndex + 1 }}
+    </p>
+
     <img :src="imageLink" alt="Podcast cover" class="podcast-image" />
     <p class="description">{{ description }}</p><br>
     <audio controls ref="audioElement" class="audio-player">
@@ -8,11 +12,13 @@
       Tu navegador no soporta la reproducción de audio.
     </audio>
     <div class="footer">
-      <button class="btn btn-secondary" @click="handleBack">Volver</button>
-      <button class="btn btn-primary" :disabled="!isNextEnabled" @click="handleNextPodcast">Continuar</button>
+      <button class="btn btn-primary" :disabled="!hasPreviousPodcast" @click="handlePreviousPodcast">Atrás</button>
+      <button class="btn btn-secondary" @click="handleBack">Ruta</button>
+      <button class="btn btn-primary" :disabled="!isNextEnabled" @click="handleNextPodcast">Siguiente</button>
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from 'vue';
@@ -35,6 +41,7 @@ export default defineComponent({
     const audioElement = ref<HTMLAudioElement | null>(null);
     const progress = ref(0);
     const isNextEnabled = ref(false);
+    const hasPreviousPodcast = ref(false);
 
     const loadPodcastData = () => {
       const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
@@ -44,26 +51,40 @@ export default defineComponent({
         description.value = podcast.description;
         audioLink.value = podcast.audioLink;
         imageLink.value = podcast.imageLink;
-        resetAudio(); // Reiniciar y reproducir el audio al cargar un nuevo podcast
+        resetAudio();
+        checkHasPreviousPodcast();
       }
     };
 
     const resetAudio = () => {
+      if (audioElement.value) {
+        audioElement.value.load();
+        audioElement.value.currentTime = 0;
+        isNextEnabled.value = false;
+        progress.value = 0;
+
+        // Reproducir automáticamente el audio
+        audioElement.value.play().catch((error) => {
+          console.log('Fallo en la reproducción automática:', error);
+        });
+      }
+    };
+
+    const handleAudioEnded = () => {
+      if (isLastPodcast()) {
         if (audioElement.value) {
-          audioElement.value.load();
-          audioElement.value.currentTime = 0;
-          isNextEnabled.value = false;
-          progress.value = 0;
-
-          // Reproducir automáticamente el audio cuando esté listo
-          audioElement.value.play().then(() => {
-            console.log('Reproducción automática iniciada');
-          }).catch((error) => {
-            console.log('Fallo en la reproducción automática:', error);
-          });
+          audioElement.value.removeEventListener('ended', handleAudioEnded);
         }
-      };
+      } else {
+        handleNextPodcast();
+      }
+    };
 
+
+    const checkHasPreviousPodcast = () => {
+      // Verificar si hay un podcast anterior
+      hasPreviousPodcast.value = podcastIndex.value > 0 || moduleIndex.value > 0;
+    };
 
     const trackProgress = () => {
       if (audioElement.value) {
@@ -75,28 +96,21 @@ export default defineComponent({
       }
     };
 
-
     const markPodcastCompleted = () => {
       const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
-      
-      // Marca el podcast actual como completado
       savedProgress.modules[moduleIndex.value].podcasts[podcastIndex.value].completed = true;
       savedProgress.modules[moduleIndex.value].podcasts[podcastIndex.value].podcastStage = 'completed';
 
-      // Habilita el siguiente podcast
       const nextPodcast = savedProgress.modules[moduleIndex.value].podcasts[podcastIndex.value + 1];
-      
       if (nextPodcast && nextPodcast.podcastStage === 'disabled') {
         nextPodcast.podcastStage = 'enabled';
       } else {
-        // Si no hay un siguiente podcast en el módulo actual, habilita el primero del siguiente módulo
         const nextModule = savedProgress.modules[moduleIndex.value + 1];
         if (nextModule && nextModule.podcasts[0].podcastStage === 'disabled') {
           nextModule.podcasts[0].podcastStage = 'enabled';
         }
       }
 
-      // Guarda el progreso actualizado en localStorage
       localStorage.setItem('podcastProgress', JSON.stringify(savedProgress));
     };
 
@@ -118,14 +132,34 @@ export default defineComponent({
       }
 
       localStorage.setItem('podcastProgress', JSON.stringify(savedProgress));
-      loadPodcastData(); // Cargar el siguiente podcast
+      loadPodcastData();
+    };
+
+    const handlePreviousPodcast = () => {
+      const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}'); // Añade esta línea para definir savedProgress
+      if (podcastIndex.value > 0) {
+        podcastIndex.value -= 1;
+      } else if (moduleIndex.value > 0) {
+        moduleIndex.value -= 1;
+        podcastIndex.value = savedProgress.modules[moduleIndex.value].podcasts.length - 1;
+      }
+      loadPodcastData();
+    };
+
+    const isLastPodcast = () => {
+      const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
+      const currentModule = savedProgress.modules[moduleIndex.value];
+      const isLastPodcastInModule = podcastIndex.value === currentModule.podcasts.length - 1;
+      const isLastModule = moduleIndex.value === savedProgress.modules.length - 1;
+      return isLastPodcastInModule && isLastModule;
     };
 
     onMounted(() => {
       loadPodcastData();
+
       if (audioElement.value) {
         audioElement.value.addEventListener('timeupdate', trackProgress);
-        audioElement.value.addEventListener('ended', handleNextPodcast); // Reproduce automáticamente el siguiente podcast al finalizar
+        audioElement.value.addEventListener('ended', handleAudioEnded);
       }
     });
 
@@ -140,9 +174,13 @@ export default defineComponent({
       imageLink,
       audioElement,
       isNextEnabled,
+      hasPreviousPodcast,
       handleBack,
       handleNextPodcast,
+      handlePreviousPodcast,
       progress,
+      moduleIndex,
+      podcastIndex
     };
   },
 });
@@ -221,6 +259,14 @@ export default defineComponent({
   background-color: white;
   color: #8212F3;
   border: 2px solid #8212F3;
+  width: 60px; /* Ajusta el tamaño según necesites */
+  height: 60px;
+  border-radius: 50%; /* Hace el botón circular */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem; /* Agranda el texto ligeramente */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-secondary:hover {
@@ -233,4 +279,16 @@ export default defineComponent({
   transform: translateY(0);
   box-shadow: none;
 }
+
+
+.current-position {
+  font-size: 1.2rem;
+  color: #666; /* Color gris como el de la descripción */
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+
+
+
 </style>
