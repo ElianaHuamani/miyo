@@ -6,6 +6,7 @@
     </div>
 
     <div class="modules-container max-w-lg mx-auto mt-6">
+      
       <div v-for="(module, moduleIndex) in journeyData?.modules" :key="moduleIndex" class="module">
         <div class="module-divider flex items-center justify-center my-4 relative">
           <span class="module-title text-sm md:text-lg px-2 bg-white z-10">{{ module.title }}</span>
@@ -15,6 +16,7 @@
         <div v-for="(podcast, podcastIndex) in module.podcasts" 
           :key="podcastIndex" class="podcast-item flex justify-center mb-4"
           :class="{'zigzag-left': podcastIndex % 2 === 0, 'zigzag-right': podcastIndex % 2 !== 0}">
+          
           <div 
             :class="['podcast-circle', getPodcastClass(podcast.podcastStage)]" 
             @click="handlePodcastClick(podcast, moduleIndex, podcastIndex)">
@@ -22,8 +24,13 @@
             <img v-if="podcast.podcastStage === 'enabled'" :src="iconPlay" alt="Play Icon" />
             <img v-if="podcast.podcastStage === 'completed'" :src="iconStar" alt="Star Icon" />
           </div>
+          
+          <span v-if="podcast.podcastStage === 'completed'" class="completed-title">{{ podcast.title }}</span>
         </div>
       </div>
+
+
+      
     </div>
   </div>
 </template>
@@ -109,7 +116,7 @@ export default defineComponent({
     };
 
     const handlePodcastClick = (podcast: any, moduleIndex: number, podcastIndex: number) => {
-      if (podcast.podcastStage === 'enabled') {
+      if (podcast.podcastStage === 'enabled' || podcast.podcastStage === 'completed') {
         router.push({
           path: '/podcast',
           query: {
@@ -117,12 +124,16 @@ export default defineComponent({
             description: podcast.description,
             audioLink: podcast.audioLink,
             imageLink: podcast.imageLink,
-            moduleIndex: moduleIndex.toString(),
+            moduleIndex: moduleIndex.toString(), // Asegúrate de pasar moduleIndex correctamente
             podcastIndex: podcastIndex.toString(),
           },
         });
       }
     };
+
+
+
+
 
     onMounted(() => {
       initializeProgress();
@@ -242,4 +253,16 @@ export default defineComponent({
   transform: scale(1.1);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
+
+.completed-title {
+  font-size: 0.68rem; /* Tamaño de letra más pequeño */
+  color: #666; /* Mismo tono que los demás textos */
+  text-align: center;
+  margin-top: 0.25rem;
+  white-space: normal; /* Permite que el texto se ajuste a múltiples líneas si es necesario */
+  display: block; /* Coloca el título debajo del círculo */
+  max-width: 140px; /* Limita el ancho para mantenerlo alineado con el círculo */
+}
+
+
 </style>
