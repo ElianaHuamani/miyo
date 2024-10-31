@@ -49,19 +49,21 @@ export default defineComponent({
     };
 
     const resetAudio = () => {
-      if (audioElement.value) {
-        audioElement.value.load(); // Recargar el elemento audio para actualizar la fuente
-        audioElement.value.currentTime = 0; // Reiniciar el tiempo de reproducción
-        isNextEnabled.value = false; // Deshabilitar el botón de "Continuar" para el nuevo podcast
-        progress.value = 0; // Reiniciar el progreso
+        if (audioElement.value) {
+          audioElement.value.load();
+          audioElement.value.currentTime = 0;
+          isNextEnabled.value = false;
+          progress.value = 0;
 
-        // Intentar reproducir automáticamente el audio
-        audioElement.value.play().catch((error) => {
-          console.log('Autoplay failed:', error);
-          // En caso de que el navegador bloquee el autoplay, se muestra un mensaje en la consola.
-        });
-      }
-    };
+          // Reproducir automáticamente el audio cuando esté listo
+          audioElement.value.play().then(() => {
+            console.log('Reproducción automática iniciada');
+          }).catch((error) => {
+            console.log('Fallo en la reproducción automática:', error);
+          });
+        }
+      };
+
 
     const trackProgress = () => {
       if (audioElement.value) {
@@ -123,6 +125,7 @@ export default defineComponent({
       loadPodcastData();
       if (audioElement.value) {
         audioElement.value.addEventListener('timeupdate', trackProgress);
+        audioElement.value.addEventListener('ended', handleNextPodcast); // Reproduce automáticamente el siguiente podcast al finalizar
       }
     });
 
