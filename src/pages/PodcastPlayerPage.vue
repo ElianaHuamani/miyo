@@ -12,9 +12,13 @@
       Tu navegador no soporta la reproducción de audio.
     </audio>
     <div class="footer">
-      <button class="btn btn-primary" :disabled="!hasPreviousPodcast" @click="handlePreviousPodcast">Atrás</button>
+      <button class="btn" :disabled="!hasPreviousPodcast" @click="handlePreviousPodcast">
+        <img src="@/assets/icons/btn-back.svg" alt="Atrás" />
+      </button>
       <button class="btn btn-secondary" @click="handleBack">Ruta</button>
-      <button class="btn btn-primary" :disabled="!isNextEnabled" @click="handleNextPodcast">Siguiente</button>
+      <button class="btn" :disabled="!isNextEnabled" @click="handleNextPodcast">
+        <img src="@/assets/icons/btn-forward.svg" alt="Siguiente" />
+      </button>
     </div>
   </div>
 </template>
@@ -233,53 +237,26 @@ export default defineComponent({
 }
 
 .btn {
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: 500;
-  border-radius: 24px;
+  background: none; /* Sin fondo */
+  border: none; /* Sin borde */
+  padding: 0;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  outline: none;
-  border: none;
 }
 
-.btn-primary {
-  background-color: #8212F3;
-  color: white;
-  box-shadow: 0px 4px 12px rgba(130, 18, 243, 0.3);
-}
-
-.btn-primary:disabled {
-  background-color: #d3c4f6;
+.btn:disabled {
   cursor: not-allowed;
-  box-shadow: none;
+  opacity: 0.5; /* Opacidad para el estado deshabilitado */
 }
 
-.btn-secondary {
-  background-color: white;
-  color: #8212F3;
-  border: 2px solid #8212F3;
-  width: 60px; /* Ajusta el tamaño según necesites */
-  height: 60px;
-  border-radius: 50%; /* Hace el botón circular */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem; /* Agranda el texto ligeramente */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.btn img {
+  width: 50px; /* Tamaño del SVG */
+  height: 50px;
+  opacity: 1; /* SVG completamente visible cuando está habilitado */
 }
 
-.btn-secondary:hover {
-  background-color: #f3e7ff;
-  transform: translateY(-2px);
-  box-shadow: 0px 6px 12px rgba(130, 18, 243, 0.2);
+.btn:disabled img {
+  opacity: 0.5; /* SVG opaco en estado deshabilitado */
 }
-
-.btn-secondary:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
 
 .current-position {
   font-size: 1.2rem;
@@ -287,8 +264,5 @@ export default defineComponent({
   margin-bottom: 1rem;
   text-align: center;
 }
-
-
-
 
 </style>
