@@ -133,10 +133,16 @@ export default defineComponent({
       const nextPodcastIndex = podcastIndex.value + 1;
 
       if (savedProgress.modules[moduleIndex.value]?.podcasts[nextPodcastIndex]) {
-        savedProgress.modules[moduleIndex.value].podcasts[nextPodcastIndex].podcastStage = 'enabled';
+        const nextPodcast = savedProgress.modules[moduleIndex.value].podcasts[nextPodcastIndex];
+        if (nextPodcast.podcastStage === 'disabled') {
+          nextPodcast.podcastStage = 'enabled';
+        }
         podcastIndex.value = nextPodcastIndex;
       } else if (savedProgress.modules[moduleIndex.value + 1]?.podcasts[0]) {
-        savedProgress.modules[moduleIndex.value + 1].podcasts[0].podcastStage = 'enabled';
+        const nextModulePodcast = savedProgress.modules[moduleIndex.value + 1].podcasts[0];
+        if (nextModulePodcast.podcastStage === 'disabled') {
+          nextModulePodcast.podcastStage = 'enabled';
+        }
         moduleIndex.value += 1;
         podcastIndex.value = 0;
       }
@@ -144,6 +150,7 @@ export default defineComponent({
       localStorage.setItem('podcastProgress', JSON.stringify(savedProgress));
       loadPodcastData();
     };
+
 
     const handlePreviousPodcast = () => {
       const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}'); // Añade esta línea para definir savedProgress
