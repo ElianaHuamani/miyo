@@ -273,10 +273,11 @@ export default defineComponent({
 
 .breadcrumb {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  gap: 5px; /* Espacio entre las cápsulas */
+  gap: 5px;
   margin-bottom: 1rem;
+  justify-content: flex-start;
+  width: 100%; /* Asegura que se mantenga a la izquierda en el contenedor */
 }
 
 .breadcrumb button,
@@ -284,7 +285,7 @@ export default defineComponent({
   background-color: #F3F3F3; /* Fondo gris claro para las cápsulas de cada nivel */
   color: #555555; /* Texto gris oscuro */
   font-weight: bold;
-  padding: 5px 11px;
+  padding: 2px 11px;
   border-radius: 15px;
   display: inline-flex;
   align-items: center;
@@ -296,7 +297,9 @@ export default defineComponent({
 }
 
 .breadcrumb button:hover {
-  color: #333333; /* Gris más oscuro al pasar el mouse */
+  color: #000000; /* Cambia a un tono más oscuro para resaltar */
+  background-color: #e0e0e0; /* Fondo ligeramente más oscuro en hover */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave para dar presencia */
 }
 
 .breadcrumb-separator {

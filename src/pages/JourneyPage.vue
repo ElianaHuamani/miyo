@@ -1,6 +1,13 @@
 <template>
   <div v-if="isLoading" class="loading-spinner">Cargando...</div>
   <div v-else class="journey-wrapper px-4 py-6 md:px-10">
+    <!-- Breadcrumb con cápsulas -->
+    <nav aria-label="breadcrumb" class="breadcrumb">
+      <button class="btn" @click="navigateToHome">Inicio</button>
+      <span class="breadcrumb-separator">&gt;</span>
+      <span class="breadcrumb-text">Ruta</span>
+    </nav>
+    
     <div class="header relative w-full">
       <h1 class="title text-2xl md:text-3xl text-center">{{ journeyData?.journey }}</h1>
     </div>
@@ -103,6 +110,10 @@ export default defineComponent({
       applyProgress();
     };
 
+    const navigateToHome = () => {
+      router.push('/');
+    };
+
     const getPodcastClass = (stage: string) => {
       switch (stage) {
         case 'enabled':
@@ -131,10 +142,6 @@ export default defineComponent({
       }
     };
 
-
-
-
-
     onMounted(() => {
       initializeProgress();
       fetchJourneyData(); // Ejecuta fetch solo una vez después de inicializar
@@ -148,6 +155,7 @@ export default defineComponent({
       iconBlock,
       iconStar,
       iconPlay,
+      navigateToHome,
     };
   },
 });
@@ -262,6 +270,43 @@ export default defineComponent({
   white-space: normal; /* Permite que el texto se ajuste a múltiples líneas si es necesario */
   display: block; /* Coloca el título debajo del círculo */
   max-width: 140px; /* Limita el ancho para mantenerlo alineado con el círculo */
+}
+
+.breadcrumb {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 1rem;
+  max-width: 700px; /* Limita el ancho para que coincida con el título */
+  margin-left: auto;
+  margin-right: auto;
+  transform: translateX(-400px); /* Ajusta el valor para mover más o menos hacia la izquierda */
+}
+
+
+
+.breadcrumb button,
+.breadcrumb .breadcrumb-text {
+  background-color: #F3F3F3; /* Fondo gris claro para las cápsulas */
+  color: #555555; /* Texto gris oscuro */
+  font-weight: bold;
+  padding: 5px 11px;
+  border-radius: 15px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.breadcrumb button:hover {
+  color: #333333; /* Gris más oscuro en hover */
+  background-color: #e0e0e0;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para dar presencia */
+}
+
+.breadcrumb-separator {
+  color: #E1E1E1;
+  font-weight: bold;
+  font-size: 1.5rem;
 }
 
 
