@@ -1,27 +1,33 @@
 <template>
   <div class="podcast-player-wrapper">
-    <br><br>
-    <p class="current-position">
-      Módulo {{ moduleIndex + 1 }} - Podcast {{ podcastIndex + 1 }}
-    </p>
-
+    <br>
+    
+    <!-- Breadcrumb con separador personalizado -->
+    <nav aria-label="breadcrumb" class="breadcrumb">
+      <button class="btn" @click="handleBack">Ruta</button>
+      <span class="breadcrumb-separator">&gt;</span>
+      <span>Módulo {{ moduleIndex + 1 }} - Podcast {{ podcastIndex + 1 }}</span>
+    </nav>
+    
     <img :src="imageLink" alt="Podcast cover" class="podcast-image" />
     <p class="description">{{ description }}</p><br>
     <audio controls ref="audioElement" class="audio-player">
       <source :src="audioLink" type="audio/mpeg" />
       Tu navegador no soporta la reproducción de audio.
     </audio>
+    
     <div class="footer">
       <button class="btn" :disabled="!hasPreviousPodcast" @click="handlePreviousPodcast">
         <img src="@/assets/icons/btn-back.svg" alt="Atrás" />
       </button>
-      <button class="btn btn-secondary" @click="handleBack">Ruta</button>
       <button class="btn" :disabled="!isNextEnabled" @click="handleNextPodcast">
         <img src="@/assets/icons/btn-forward.svg" alt="Siguiente" />
       </button>
     </div>
   </div>
 </template>
+
+
 
 
 <script lang="ts">
@@ -264,5 +270,40 @@ export default defineComponent({
   margin-bottom: 1rem;
   text-align: center;
 }
+
+.breadcrumb {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px; /* Espacio entre las cápsulas */
+  margin-bottom: 1rem;
+}
+
+.breadcrumb button,
+.breadcrumb span:not(.breadcrumb-separator) {
+  background-color: #F3F3F3; /* Fondo gris claro para las cápsulas de cada nivel */
+  color: #555555; /* Texto gris oscuro */
+  font-weight: bold;
+  padding: 5px 11px;
+  border-radius: 15px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.breadcrumb button {
+  border: none;
+  cursor: pointer;
+}
+
+.breadcrumb button:hover {
+  color: #333333; /* Gris más oscuro al pasar el mouse */
+}
+
+.breadcrumb-separator {
+  color: #E1E1E1; /* Gris oscuro para el símbolo */
+  font-weight: bold;
+  font-size: 1.5rem; /* Tamaño más grande para destacarlo */
+}
+
 
 </style>
