@@ -274,27 +274,26 @@ export default defineComponent({
 
 .breadcrumb {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
   gap: 5px;
   margin-bottom: 1rem;
-  max-width: 700px; /* Limita el ancho para que coincida con el título */
+  width: 100%; /* Asegura que ocupe todo el ancho disponible */
+  max-width: 700px; /* Limita el ancho en pantallas grandes */
   margin-left: auto;
   margin-right: auto;
-  transform: translateX(-400px); /* Ajusta el valor para mover más o menos hacia la izquierda */
+  padding: 0 10px; /* Agrega espacio para evitar cortes en los bordes */
 }
-
-
 
 .breadcrumb button,
 .breadcrumb .breadcrumb-text {
-  background-color: #F3F3F3; /* Fondo gris claro para las cápsulas */
-  color: #555555; /* Texto gris oscuro */
+  background-color: #F3F3F3;
+  color: #555555;
   font-weight: bold;
-  padding: 5px 11px;
+  padding: 4px 10px; /* Espaciado equilibrado para pantallas de todos los tamaños */
   border-radius: 15px;
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0; /* Evita que los botones se reduzcan demasiado en pantallas pequeñas */
 }
 
 .breadcrumb button:hover {
@@ -307,6 +306,7 @@ export default defineComponent({
   color: #E1E1E1;
   font-weight: bold;
   font-size: 1.5rem;
+  flex-shrink: 0; /* Mantiene el tamaño del separador */
 }
 
 
