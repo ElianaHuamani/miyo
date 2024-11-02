@@ -100,7 +100,9 @@ export default defineComponent({
       if (audioElement.value) {
         progress.value = (audioElement.value.currentTime / audioElement.value.duration) * 100;
         if (progress.value >= 80 && !isNextEnabled.value) {
-          isNextEnabled.value = true;
+          if (!isLastPodcast()) {
+            isNextEnabled.value = true;
+          }
           markPodcastCompleted();
         }
       }
