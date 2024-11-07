@@ -97,7 +97,14 @@ export default defineComponent({
     };
 
     const trackProgress = () => {
-      if (audioElement.value) {
+      const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
+      const currentPodcast = savedProgress.modules[moduleIndex.value]?.podcasts[podcastIndex.value];
+
+      // Verifica si el podcast ya está marcado como "completed"
+      if (currentPodcast?.podcastStage === 'completed') {
+        isNextEnabled.value = true;
+      } else if (audioElement.value) {
+        // Si no está "completed", aplica la validación de progreso
         progress.value = (audioElement.value.currentTime / audioElement.value.duration) * 100;
         if (progress.value >= 80 && !isNextEnabled.value) {
           if (!isLastPodcast()) {
@@ -316,6 +323,4 @@ export default defineComponent({
   font-weight: bold;
   font-size: 1.5rem; /* Tamaño más grande para destacarlo */
 }
-
-
 </style>
