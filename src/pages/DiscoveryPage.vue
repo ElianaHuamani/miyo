@@ -2,7 +2,7 @@
   <div class="discovery-page container mx-auto p-4">
     <!-- Sección 1 con el componente Carousel -->
     <section class="section my-8">
-      <h2 class="text-2xl font-bold mb-4">Finanzas Personales</h2>
+      <h2 class="text-2xl font-bold mb-4">Finanzas</h2>
       <hr class="mb-6" />
       <Carousel>
         <Card
