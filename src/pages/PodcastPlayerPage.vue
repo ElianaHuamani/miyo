@@ -63,6 +63,25 @@ export default defineComponent({
         imageLink.value = podcast.imageLink;
         resetAudio();
         checkHasPreviousPodcast();
+
+        // Configura la sesión de medios si es compatible con el navegador
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: title.value,
+            artist: 'Nombre del autor o artista',
+            album: `Módulo ${moduleIndex.value + 1}`,
+            artwork: [
+              { src: imageLink.value, sizes: '96x96', type: 'image/png' },
+              { src: imageLink.value, sizes: '128x128', type: 'image/png' },
+              { src: imageLink.value, sizes: '192x192', type: 'image/png' },
+              { src: imageLink.value, sizes: '256x256', type: 'image/png' },
+              { src: imageLink.value, sizes: '384x384', type: 'image/png' },
+              { src: imageLink.value, sizes: '512x512', type: 'image/png' }
+            ]
+          });
+        }
+
+
       }
     };
 
