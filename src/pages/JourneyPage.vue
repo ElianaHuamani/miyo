@@ -65,16 +65,14 @@ export default defineComponent({
     const initializeProgress = () => {
       if (!localStorage.getItem('podcastProgress')) {
         const initialProgress = {
-          modules: journeyData.value.modules.map((module, moduleIndex) => ({
+          modules: journeyData.value.modules.map((module) => ({
             title: module.title,
-            podcasts: module.podcasts.map((podcast, podcastIndex) => ({
+            podcasts: module.podcasts.map((podcast) => ({
               title: podcast.title,
               description: podcast.description,
               audioLink: podcast.audioLink,
               imageLink: podcast.imageLink,
               completed: false,
-              // Solo habilitar el primer podcast del primer módulo
-              //podcastStage: moduleIndex === 0 && podcastIndex === 0 ? 'enabled' : 'disabled',
               podcastStage: 'enabled',
             })),
           })),
