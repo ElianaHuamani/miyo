@@ -32,7 +32,9 @@
             <img v-if="podcast.podcastStage === 'completed'" :src="iconStar" alt="Star Icon" />
           </div>
           
-          <span v-if="podcast.podcastStage === 'completed'" class="completed-title">{{ podcast.title }}</span>
+          <!-- <span v-if="podcast.podcastStage === 'completed'" class="completed-title">{{ podcast.title }}</span> -->
+          <span class="completed-title">{{ podcast.title }}</span>
+        
         </div>
       </div>
 
@@ -72,7 +74,8 @@ export default defineComponent({
               imageLink: podcast.imageLink,
               completed: false,
               // Solo habilitar el primer podcast del primer módulo
-              podcastStage: moduleIndex === 0 && podcastIndex === 0 ? 'enabled' : 'disabled',
+              //podcastStage: moduleIndex === 0 && podcastIndex === 0 ? 'enabled' : 'disabled',
+              podcastStage: 'enabled',
             })),
           })),
         };
@@ -127,7 +130,7 @@ export default defineComponent({
     };
 
     const handlePodcastClick = (podcast: any, moduleIndex: number, podcastIndex: number) => {
-      if (podcast.podcastStage === 'enabled' || podcast.podcastStage === 'completed') {
+      //if (podcast.podcastStage === 'enabled' || podcast.podcastStage === 'completed') {
         router.push({
           path: '/podcast',
           query: {
@@ -139,7 +142,7 @@ export default defineComponent({
             podcastIndex: podcastIndex.toString(),
           },
         });
-      }
+      //}
     };
 
     onMounted(() => {
