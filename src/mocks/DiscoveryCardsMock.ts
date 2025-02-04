@@ -15,8 +15,8 @@ export const finanzasSectionMock = [
       image: journeyfinanzaspersonales, 
       link: '/journey',
       isActive: true,
-      timeValue: '20 min',
-      audioCount: 18,
+      timeValue: '8:30 min',
+      audioCount: 6,
     },
     {
       title: 'Inversiones para principiantes', 
