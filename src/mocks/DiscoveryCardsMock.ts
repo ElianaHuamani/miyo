@@ -15,6 +15,8 @@ export const finanzasSectionMock = [
       image: journeyfinanzaspersonales, 
       link: '/journey',
       isActive: true,
+      timeValue: '20 min',
+      audioCount: 18,
     },
     {
       title: 'Inversiones para principiantes', 
@@ -22,6 +24,8 @@ export const finanzasSectionMock = [
       image: journeyfinanzasinveriones, 
       link: '',
       isActive: false,
+      timeValue: '13 min',
+      audioCount: 18,
     },
     { 
       title: 'Planificación para libertad financiera', 
@@ -29,6 +33,8 @@ export const finanzasSectionMock = [
       image: journeyfinanzasplanificacion, 
       link: '',
       isActive: false,
+      timeValue: '15 min',
+      audioCount: 18,
     },
     { 
       title: 'Psicología del dinero', 
@@ -36,6 +42,8 @@ export const finanzasSectionMock = [
       image: journeyfinanzaspsicologiadinero, 
       link: '',
       isActive: false,
+      timeValue: '45 min',
+      audioCount: 18,
     }
   ];
 
@@ -46,6 +54,8 @@ export const finanzasSectionMock = [
       image: journeycrecimientoautoconocimiento, 
       link: '',
       isActive: false,
+      timeValue: '20 min',
+      audioCount: 18,
     },
     {
       title: 'Comunicación asertiva', 
@@ -53,6 +63,8 @@ export const finanzasSectionMock = [
       image: journeycrecimientocomunicacion, 
       link: '',
       isActive: false,
+      timeValue: '17 min',
+      audioCount: 18,
     },
     { 
       title: 'Desarrollo de habitos poderosos', 
@@ -60,6 +72,8 @@ export const finanzasSectionMock = [
       image: journeycrecimientohabitos, 
       link: '',
       isActive: false,
+      timeValue: '13',
+      audioCount: 18,
     },
     { 
       title: 'Mentalidad de crecimiento', 
@@ -67,6 +81,8 @@ export const finanzasSectionMock = [
       image: journeycrecimientomentalidad, 
       link: '',
       isActive: false,
+      timeValue: '36 min',
+      audioCount: 18,
     },
     { 
       title: 'Proposito de vida y definición de metas', 
@@ -74,6 +90,8 @@ export const finanzasSectionMock = [
       image: journeycrecimientoproposito, 
       link: '',
       isActive: false,
+      timeValue: '20 min',
+      audioCount: 18,
     }
   ];
   

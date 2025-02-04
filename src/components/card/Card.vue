@@ -10,9 +10,27 @@
     <div class="flex justify-between items-center mb-2">
       <h3 class="text-xl font-semibold">{{ title }}</h3>
     </div>
-
     <!-- Descripción (Logica de truncar si supera los 100 caracteres) -->
-    <p class="text-gray-600">{{ truncatedDescription }}</p>
+    <!-- <p class="text-gray-600">{{ truncatedDescription }}</p> -->
+
+    <br>
+
+    <div class="flex justify-between items-center px-4 text-gray-600">
+  <!-- Icono de reloj y número (izquierda) -->
+  <div class="flex items-center gap-2">
+    <img src="@/assets/icons/icono-clock.svg" alt="Clock Icon"
+  class="w-5 h-5 max-w-[20px] max-h-[20px]" />
+    <span class="text-sm leading-none whitespace-nowrap flex-none">{{ timeValue }}</span>
+  </div>
+
+  <!-- Icono de audífonos y número (derecha) -->
+  <div class="flex items-center gap-2">
+    <span class="text-sm leading-none whitespace-nowrap flex-none">{{ audioCount }}</span>
+    <img src="@/assets/icons/icono-headset.svg" alt="Headset Icon" 
+    class="w-5 h-5 max-w-[20px] max-h-[20px]" />
+  </div>
+</div>
+
   </div>
 </template>
 
@@ -42,13 +60,22 @@ export default defineComponent({
     isActive: {
       type: Boolean,
       required: true,
-    }
+    },
+    timeValue: {
+      type: String,
+      required: true,
+    },
+    audioCount: {
+      type: Number,
+      required: true,
+    },
   },
   setup(props) {
     const router = useRouter(); // Usamos Vue Router
 
     // Lógica para cargar la imagen desde las props o usar la imagen por defecto
     const imageSrc = computed(() => props.image);
+
 
     // Lógica para truncar la descripción si supera los 100 caracteres
     const truncatedDescription = computed(() => {
@@ -67,7 +94,7 @@ export default defineComponent({
     return {
       truncatedDescription,
       imageSrc,
-      goToPage
+      goToPage,
     };
   }
 });

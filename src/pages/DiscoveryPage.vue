@@ -13,6 +13,8 @@
           :image="card.image" 
           :link="card.link"
           :isActive="card.isActive"
+          :audioCount="card.audioCount"
+          :timeValue="card.timeValue"
         />
       </Carousel>
     </section>
@@ -30,6 +32,8 @@
           :image="card.image" 
           :link="card.link"
           :isActive="card.isActive"
+          :audioCount="card.audioCount"
+          :timeValue="card.timeValue"
         />
       </Carousel>
     </section>

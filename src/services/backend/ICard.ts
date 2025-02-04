@@ -4,4 +4,6 @@ export interface ICard {
     image: string;
     link: string;
     isActive: boolean;
+    timeValue: string;
+    audioCount: number;
 }
