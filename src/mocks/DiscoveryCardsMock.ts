@@ -15,7 +15,7 @@ export const finanzasSectionMock = [
       image: journeyfinanzaspersonales, 
       link: '/journey',
       isActive: true,
-      timeValue: '8:30 min',
+      timeValue: '8:40 min',
       audioCount: 6,
     },
     {
