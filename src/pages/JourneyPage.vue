@@ -2,11 +2,7 @@
   <div v-if="isLoading" class="loading-spinner">Cargando...</div>
   <div v-else class="journey-wrapper px-4 py-6 md:px-10">
     <!-- Breadcrumb con cápsulas -->
-    <nav aria-label="breadcrumb" class="breadcrumb">
-      <button class="btn" @click="navigateToHome">Inicio</button>
-      <span class="breadcrumb-separator">&gt;</span>
-      <span class="breadcrumb-text">Ruta</span>
-    </nav>
+    <Breadcrumb :routes="breadcrumbRoutes" />
     
     <div class="header relative w-full">
       <h1 class="title text-2xl md:text-3xl text-center">{{ journeyData?.journey }}</h1>
@@ -27,9 +23,7 @@
           <div 
             :class="['podcast-circle', getPodcastClass(podcast.podcastStage)]" 
             @click="handlePodcastClick(podcast, moduleIndex, podcastIndex)">
-            <img v-if="podcast.podcastStage === 'disabled'" :src="iconBlock" alt="Blocked Icon" />
-            <img v-if="podcast.podcastStage === 'enabled'" :src="iconPlay" alt="Play Icon" />
-            <img v-if="podcast.podcastStage === 'completed'" :src="iconStar" alt="Star Icon" />
+            <img :src="getPodcastIcon[podcast.podcastStage]" :alt="podcast.podcastStage + ' Icon'" />
           </div>
           
           <!-- <span v-if="podcast.podcastStage === 'completed'" class="completed-title">{{ podcast.title }}</span> -->
@@ -45,21 +39,38 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { IJourney } from '../services/backend/IJourney';
 import { FinanzasJourneyMock } from '../mocks/FinanzasJourneyMock';
 import iconBlock from '@/assets/icons/icono-block.svg';
 import iconStar from '@/assets/icons/icono-start.svg';
 import iconPlay from '@/assets/icons/icono-play.svg';
+import Breadcrumb from '../common/components/Breadcrumb.vue';
+
 
 export default defineComponent({
   name: 'JourneyPage',
+  components: {
+    Breadcrumb,
+  },
   setup() {
+
+    const breadcrumbRoutes = ref([
+      { label: 'Inicio', path: '/' },
+      { label: 'Ruta', path: '/ruta' }
+    ]);
+    
     const journeyData = ref<IJourney>(JSON.parse(JSON.stringify(FinanzasJourneyMock)));
     const isLoading = ref(false);
     const router = useRouter();
     const useMockData = true; // Cambiar a `false` para simular una llamada a la API
+
+    const getPodcastIcon = computed(() => ({
+      disabled: iconBlock,
+      enabled: iconPlay,
+      completed: iconStar
+    }));
 
     // Inicializa solo una vez si no existe en `localStorage`
     const initializeProgress = () => {
@@ -157,6 +168,8 @@ export default defineComponent({
       iconStar,
       iconPlay,
       navigateToHome,
+      breadcrumbRoutes,
+      getPodcastIcon,
     };
   },
 });
@@ -272,43 +285,5 @@ export default defineComponent({
   display: block; /* Coloca el título debajo del círculo */
   max-width: 140px; /* Limita el ancho para mantenerlo alineado con el círculo */
 }
-
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 1rem;
-  width: 100%; /* Asegura que ocupe todo el ancho disponible */
-  max-width: 700px; /* Limita el ancho en pantallas grandes */
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 10px; /* Agrega espacio para evitar cortes en los bordes */
-}
-
-.breadcrumb button,
-.breadcrumb .breadcrumb-text {
-  background-color: #F3F3F3;
-  color: #555555;
-  font-weight: bold;
-  padding: 4px 10px; /* Espaciado equilibrado para pantallas de todos los tamaños */
-  border-radius: 15px;
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0; /* Evita que los botones se reduzcan demasiado en pantallas pequeñas */
-}
-
-.breadcrumb button:hover {
-  color: #333333; /* Gris más oscuro en hover */
-  background-color: #e0e0e0;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para dar presencia */
-}
-
-.breadcrumb-separator {
-  color: #E1E1E1;
-  font-weight: bold;
-  font-size: 1.5rem;
-  flex-shrink: 0; /* Mantiene el tamaño del separador */
-}
-
 
 </style>
