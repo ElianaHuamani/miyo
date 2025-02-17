@@ -35,7 +35,20 @@
 
       
     </div>
+
+    <!-- Botón flotante -->
+  <button 
+      class="fixed bottom-6 right-6 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition"
+      @click="handleFeedback"
+      v-show="completedPodcastsCount >= 3" 
+    >
+    Déjanos tu opinión
+    </button>
+
+    
   </div>
+  
+
 </template>
 
 <script lang="ts">
@@ -56,9 +69,19 @@ export default defineComponent({
   },
   setup() {
 
+    const handleFeedback = () => {
+      window.open('https://miyoapp.fillout.com/t/6wmMWrGxTbus', '_blank');
+    };
+
+    const completedPodcastsCount = computed(() => {
+      return journeyData.value.modules.reduce((total, module) => {
+        return total + module.podcasts.filter(podcast => podcast.podcastStage === 'completed').length;
+      }, 0);
+    });
+
     const breadcrumbRoutes = ref([
       { label: 'Inicio', path: '/' },
-      { label: 'Ruta', path: '/ruta' }
+      { label: 'Ruta', path: '' }
     ]);
     
     const journeyData = ref<IJourney>(JSON.parse(JSON.stringify(FinanzasJourneyMock)));
@@ -170,6 +193,8 @@ export default defineComponent({
       navigateToHome,
       breadcrumbRoutes,
       getPodcastIcon,
+      handleFeedback,
+      completedPodcastsCount,
     };
   },
 });
