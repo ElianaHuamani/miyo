@@ -37,13 +37,24 @@
     </div>
 
     <!-- Botón flotante -->
-  <button 
-      class="fixed bottom-6 right-6 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition"
-      @click="handleFeedback"
-      v-show="completedPodcastsCount >= 3" 
-    >
-    Déjanos tu opinión
-    </button>
+  
+
+    <!-- Botón en Móviles (Centrado) -->
+<button 
+  class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition block md:hidden"
+  @click="handleFeedback"
+  v-show="completedPodcastsCount >= 3">
+  Déjanos tu opinión
+</button>
+
+<!-- Botón en Desktop (A la derecha) -->
+<button 
+  class="fixed bottom-6 right-6 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition hidden md:block"
+  @click="handleFeedback"
+  v-show="completedPodcastsCount >= 3">
+  Déjanos tu opinión
+</button>
+
 
     
   </div>
