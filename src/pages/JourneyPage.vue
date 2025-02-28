@@ -26,14 +26,10 @@
             <img :src="getPodcastIcon[podcast.podcastStage]" :alt="podcast.podcastStage + ' Icon'" />
           </div>
           
-          <!-- <span v-if="podcast.podcastStage === 'completed'" class="completed-title">{{ podcast.title }}</span> -->
           <span class="completed-title">{{ podcast.title }}</span>
-        
         </div>
       </div>
 
-
-      
     </div>
     
     <!-- Botón flotante -->
@@ -52,9 +48,6 @@
             v-show="completedPodcastsCount >= 3">
             Déjanos tu opinión
           </button>
-
-
-    
   </div>
   
 
@@ -62,9 +55,11 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { IJourney } from '../services/backend/IJourney';
-import { FinanzasJourneyMock } from '../mocks/FinanzasJourneyMock';
+import { ComoFuncionaElSistemaFinanieroJourneyMock } from '@/mocks/journeys/ComoFuncionaElSistemaFinanieroJourneyMock.ts';
+import { ConstruyeTuLibertadFinancieraJourneyMock } from '@/mocks/journeys/ConstruyeTuLibertadFinancieraJourneyMock.ts';
+import { DesentranandoCreenciasFinancierasJourneyMock } from '@/mocks/journeys/DesentranandoCreenciasFinancierasJourneyMock.ts';
 import iconBlock from '@/assets/icons/icono-block.svg';
 import iconStar from '@/assets/icons/icono-start.svg';
 import iconPlay from '@/assets/icons/icono-play.svg';
@@ -77,6 +72,27 @@ export default defineComponent({
     Breadcrumb,
   },
   setup() {
+    //const journeyData = ref<IJourney>(DesentranandoCreenciasFinancierasJourneyMock);
+    const journeyData = ref<IJourney>(JSON.parse(JSON.stringify(DesentranandoCreenciasFinancierasJourneyMock)));
+    const isLoading = ref(false); 
+    const router = useRouter(); //se usa para navegación (ejemplo: router.push('/ruta')).
+    const route = useRoute(); //se usa para obtener información de la URL actual 
+    const useMockData = true; // Cambiar a `false` para simular una llamada a la API
+
+    const journeyMocks: Record<string, IJourney> = {
+      'finanzas-desentranando-creencias-financieras': DesentranandoCreenciasFinancierasJourneyMock,
+      'finanzas-como-funciona-el-sistema-financiero': ComoFuncionaElSistemaFinanieroJourneyMock,
+      'finanzas-construye-tu-libertad-financiera': ConstruyeTuLibertadFinancieraJourneyMock,
+    };
+
+    
+    const loadJourneyData = () => {
+      if (!localStorage.getItem('podcastProgress')) {
+        const courseId = route.query.course as string;
+        journeyData.value = journeyMocks[courseId] || DesentranandoCreenciasFinancierasJourneyMock;
+      }
+    };
+
 
     const handleFeedback = () => {
       window.open('https://miyoapp.fillout.com/t/6wmMWrGxTbus', '_blank');
@@ -93,11 +109,6 @@ export default defineComponent({
       { label: 'Ruta', path: '' }
     ]);
     
-    const journeyData = ref<IJourney>(JSON.parse(JSON.stringify(FinanzasJourneyMock)));
-    const isLoading = ref(false);
-    const router = useRouter();
-    const useMockData = true; // Cambiar a `false` para simular una llamada a la API
-
     const getPodcastIcon = computed(() => ({
       disabled: iconBlock,
       enabled: iconPlay,
@@ -138,16 +149,15 @@ export default defineComponent({
     const fetchJourneyData = async () => {
       isLoading.value = true;
       if (useMockData) {
-        journeyData.value = JSON.parse(JSON.stringify(FinanzasJourneyMock));
+        journeyData.value = JSON.parse(JSON.stringify(ComoFuncionaElSistemaFinanieroJourneyMock));
       } else {
-        // Simulación de una llamada a la API
         try {
           const response = await fetch('https://api.example.com/journey'); // Cambiar URL a la de tu API
           if (!response.ok) throw new Error('Error al obtener los datos');
           journeyData.value = await response.json();
         } catch (error) {
           console.error('Error en la llamada a la API:', error);
-          journeyData.value = FinanzasJourneyMock; // Fallback en caso de error
+          journeyData.value = ComoFuncionaElSistemaFinanieroJourneyMock; // Fallback en caso de error
         }
       }
       isLoading.value = false;
@@ -171,7 +181,6 @@ export default defineComponent({
     };
 
     const handlePodcastClick = (podcast: any, moduleIndex: number, podcastIndex: number) => {
-      //if (podcast.podcastStage === 'enabled' || podcast.podcastStage === 'completed') {
         router.push({
           path: '/podcast',
           query: {
@@ -179,16 +188,16 @@ export default defineComponent({
             description: podcast.description,
             audioLink: podcast.audioLink,
             imageLink: podcast.imageLink,
-            moduleIndex: moduleIndex.toString(), // Asegúrate de pasar moduleIndex correctamente
+            moduleIndex: moduleIndex.toString(),
             podcastIndex: podcastIndex.toString(),
           },
         });
-      //}
     };
 
     onMounted(() => {
       initializeProgress();
-      fetchJourneyData(); // Ejecuta fetch solo una vez después de inicializar
+      loadJourneyData();
+      fetchJourneyData();
     });
 
     return {
