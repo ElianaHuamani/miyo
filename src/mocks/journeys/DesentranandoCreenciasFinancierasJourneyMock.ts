@@ -32,6 +32,7 @@ import imageplandeaccion from '@/assets/images/journeys/finanzas/desentranandocr
 
 
 export const DesentranandoCreenciasFinancierasJourneyMock: IJourney = {
+  id: 3,
   journey: 'Desentrañando Creencias Financieras',
   modules: [
     {

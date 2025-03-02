@@ -16,6 +16,7 @@
   }
   
   export interface IJourney {
+    id: number
     journey: string;
     modules: IModule[];
   }

@@ -38,6 +38,7 @@ import imageplanderetiro from '@/assets/images/journeys/finanzas/construyetulibe
 
 
 export const ConstruyeTuLibertadFinancieraJourneyMock: IJourney = {
+  id: 2,
   journey: 'Construye tu libertad financiera',
   modules: [
     {

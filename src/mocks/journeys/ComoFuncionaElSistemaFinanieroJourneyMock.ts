@@ -33,6 +33,7 @@ import imageriesgosmercadosfinancieros from '@/assets/images/journeys/finanzas/c
 
 
 export const ComoFuncionaElSistemaFinanieroJourneyMock: IJourney = {
+  id: 1,
   journey: '¿Cómo funciona el sistema financiero?',
   modules: [
     {

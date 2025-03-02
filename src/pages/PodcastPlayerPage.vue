@@ -78,8 +78,6 @@ export default defineComponent({
             ]
           });
         }
-
-
       }
     };
 
@@ -109,7 +107,6 @@ export default defineComponent({
 
 
     const checkHasPreviousPodcast = () => {
-      // Verificar si hay un podcast anterior
       hasPreviousPodcast.value = podcastIndex.value > 0 || moduleIndex.value > 0;
     };
 
@@ -151,7 +148,14 @@ export default defineComponent({
     };
 
     const handleBack = () => {
-      router.push('/journey');
+      // Recupera el courseId del localStorage
+      const courseId = localStorage.getItem('currentCourseId');
+      
+      if (courseId) {
+        router.push(`/journey?course=${courseId}`);
+      } else {
+        router.push('/journey');
+      }
     };
 
     const handleNextPodcast = () => {
