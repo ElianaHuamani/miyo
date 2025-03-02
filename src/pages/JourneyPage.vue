@@ -72,19 +72,16 @@ export default defineComponent({
     Breadcrumb,
   },
   setup() {
-    
     const isLoading = ref(false); 
-    const router = useRouter(); //se usa para navegación (ejemplo: router.push('/ruta')).
-    const route = useRoute(); //se usa para obtener información de la URL actual 
-    
+    const router = useRouter();
+    const route = useRoute();
+    const useMockData = true;
+    const journeyData = ref<IJourney>({} as IJourney);
     const journeyMocks: Record<string, IJourney> = {
       'finanzas-desentranando-creencias-financieras': DesentranandoCreenciasFinancierasJourneyMock,
       'finanzas-como-funciona-el-sistema-financiero': ComoFuncionaElSistemaFinanieroJourneyMock,
       'finanzas-construye-tu-libertad-financiera': ConstruyeTuLibertadFinancieraJourneyMock,
     };
-    
-    const useMockData = true;
-    const journeyData = ref<IJourney>({} as IJourney);
     
     const handleFeedback = () => {
       window.open('https://miyoapp.fillout.com/t/6wmMWrGxTbus', '_blank');

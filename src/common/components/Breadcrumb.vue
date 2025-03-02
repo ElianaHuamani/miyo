@@ -38,7 +38,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
 .breadcrumb {
   display: flex;
   align-items: center;

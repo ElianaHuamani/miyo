@@ -31,9 +31,13 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import Breadcrumb from '@/common/components/Breadcrumb.vue';
 
 export default defineComponent({
   name: 'PodcastPlayerPage',
+  components: {
+    Breadcrumb,
+  },
   setup() {
     const route = useRoute();
     const router = useRouter();
