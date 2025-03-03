@@ -1,6 +1,6 @@
 # Proyecto Miyo
 
-<img src="./src/assets/images/logo-miyo.png" alt="Logo del Proyecto" width="200"/>
+<img src="./src/assets/images/miyo-logo.svg" alt="Logo del Proyecto" width="200"/>
 
 Este es un proyecto de frontend basado en **Vue 3**, **TypeScript** y **Vite**, utilizando **TailwindCSS** para el diseño y estilos. La aplicación está preparada para escalar y agregar más funcionalidades conforme crezca el proyecto.
 

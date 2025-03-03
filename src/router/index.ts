@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import DiscoveryPage from '../pages/DiscoveryPage.vue';
-import JourneyPage from '../pages/JourneyPage.vue';
-import PodcastPlayerPage from '../pages/PodcastPlayerPage.vue';
+import DiscoveryPage from '@/pages/DiscoveryPage.vue';
+import JourneyPage from '@/pages/JourneyPage.vue';
+import PodcastPlayerPage from '@/pages/PodcastPlayerPage.vue';
 
 const routes = [
   { path: '/', component: DiscoveryPage },

@@ -2,11 +2,7 @@
   <div v-if="isLoading" class="loading-spinner">Cargando...</div>
   <div v-else class="journey-wrapper px-4 py-6 md:px-10">
     <!-- Breadcrumb con cápsulas -->
-    <nav aria-label="breadcrumb" class="breadcrumb">
-      <button class="btn" @click="navigateToHome">Inicio</button>
-      <span class="breadcrumb-separator">&gt;</span>
-      <span class="breadcrumb-text">Ruta</span>
-    </nav>
+    <Breadcrumb :routes="breadcrumbRoutes" />
     
     <div class="header relative w-full">
       <h1 class="title text-2xl md:text-3xl text-center">{{ journeyData?.journey }}</h1>
@@ -27,44 +23,120 @@
           <div 
             :class="['podcast-circle', getPodcastClass(podcast.podcastStage)]" 
             @click="handlePodcastClick(podcast, moduleIndex, podcastIndex)">
-            <img v-if="podcast.podcastStage === 'disabled'" :src="iconBlock" alt="Blocked Icon" />
-            <img v-if="podcast.podcastStage === 'enabled'" :src="iconPlay" alt="Play Icon" />
-            <img v-if="podcast.podcastStage === 'completed'" :src="iconStar" alt="Star Icon" />
+            <img :src="getPodcastIcon[podcast.podcastStage]" :alt="podcast.podcastStage + ' Icon'" />
           </div>
           
-          <!-- <span v-if="podcast.podcastStage === 'completed'" class="completed-title">{{ podcast.title }}</span> -->
-          <span class="completed-title">{{ podcast.title }}</span>
-        
+          <span class="podcast-title">{{ podcast.title }}</span>
         </div>
       </div>
 
-
-      
     </div>
+    
+    <!-- Botón flotante -->
+          <!-- Botón en Móviles (Centrado) -->
+          <button 
+            class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition block md:hidden"
+            @click="handleFeedback"
+            v-show="completedPodcastsCount >= 3">
+            Déjanos tu opinión
+          </button>
+
+          <!-- Botón en Desktop (A la derecha) -->
+          <button 
+            class="fixed bottom-6 right-6 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition hidden md:block"
+            @click="handleFeedback"
+            v-show="completedPodcastsCount >= 3">
+            Déjanos tu opinión
+          </button>
   </div>
+  
+
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { IJourney } from '../services/backend/IJourney';
-import { FinanzasJourneyMock } from '../mocks/FinanzasJourneyMock';
+import { defineComponent, ref, onMounted, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { IJourney } from '@/services/backend/IJourney';
+import { ComoFuncionaElSistemaFinanieroJourneyMock } from '@/mocks/journeys/ComoFuncionaElSistemaFinanieroJourneyMock.ts';
+import { ConstruyeTuLibertadFinancieraJourneyMock } from '@/mocks/journeys/ConstruyeTuLibertadFinancieraJourneyMock.ts';
+import { DesentranandoCreenciasFinancierasJourneyMock } from '@/mocks/journeys/DesentranandoCreenciasFinancierasJourneyMock.ts';
 import iconBlock from '@/assets/icons/icono-block.svg';
 import iconStar from '@/assets/icons/icono-start.svg';
 import iconPlay from '@/assets/icons/icono-play.svg';
+import Breadcrumb from '@/common/components/Breadcrumb.vue';
+
 
 export default defineComponent({
   name: 'JourneyPage',
+  components: {
+    Breadcrumb,
+  },
   setup() {
-    const journeyData = ref<IJourney>(JSON.parse(JSON.stringify(FinanzasJourneyMock)));
-    const isLoading = ref(false);
+    const isLoading = ref(false); 
     const router = useRouter();
-    const useMockData = true; // Cambiar a `false` para simular una llamada a la API
+    const route = useRoute();
+    const useMockData = true;
+    const journeyData = ref<IJourney>({} as IJourney);
+    const journeyMocks: Record<string, IJourney> = {
+      'finanzas-desentranando-creencias-financieras': DesentranandoCreenciasFinancierasJourneyMock,
+      'finanzas-como-funciona-el-sistema-financiero': ComoFuncionaElSistemaFinanieroJourneyMock,
+      'finanzas-construye-tu-libertad-financiera': ConstruyeTuLibertadFinancieraJourneyMock,
+    };
+    
+    const handleFeedback = () => {
+      window.open('https://miyoapp.fillout.com/t/6wmMWrGxTbus', '_blank');
+    };
 
-    // Inicializa solo una vez si no existe en `localStorage`
+    const completedPodcastsCount = computed(() => {
+      if (!journeyData.value || !journeyData.value.modules) return 0;
+      
+      return journeyData.value.modules.reduce((total, module) => {
+        return total + module.podcasts.filter(podcast => podcast.podcastStage === 'completed').length;
+      }, 0);
+    });
+
+    const breadcrumbRoutes = ref([
+      { label: 'Inicio', path: '/' },
+      { label: 'Ruta', path: '' }
+    ]);
+    
+    const getPodcastIcon = computed(() => ({
+      disabled: iconBlock,
+      enabled: iconPlay,
+      completed: iconStar
+    }));
+
     const initializeProgress = () => {
+      const courseId = route.query.course as string;
+      
+      // Verificar si existe el courseId en la URL y usarlo
+      if (typeof courseId === 'string' && journeyMocks[courseId]) {
+        journeyData.value = journeyMocks[courseId];
+      } else {
+        // Si no hay courseId en la URL, intentar recuperarlo del localStorage
+        const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
+        const savedJourneyId = savedProgress.id;
+        
+        // Encontrar el mock correspondiente por ID
+        const mockEntry = Object.entries(journeyMocks).find(
+          ([_, mock]) => mock.id === savedJourneyId
+        );
+        
+        if (mockEntry) {
+          journeyData.value = mockEntry[1];
+          // Opcionalmente, actualizar la URL para mantener coherencia
+          router.replace({ query: { ...route.query, course: mockEntry[0] } });
+        } else {
+          // Si todo falla, usar un mock por defecto
+          journeyData.value = ComoFuncionaElSistemaFinanieroJourneyMock;
+        }
+      }
+
+      // El resto de la lógica para inicializar el progreso...
       if (!localStorage.getItem('podcastProgress')) {
         const initialProgress = {
+          id: journeyData.value.id,
+          journey: journeyData.value.journey,
           modules: journeyData.value.modules.map((module) => ({
             title: module.title,
             podcasts: module.podcasts.map((podcast) => ({
@@ -77,15 +149,26 @@ export default defineComponent({
             })),
           })),
         };
+
         localStorage.setItem('podcastProgress', JSON.stringify(initialProgress));
       }
     };
 
+
     // Carga el progreso guardado en `localStorage` y lo aplica directamente a `journeyData`
     const applyProgress = () => {
+      if (!journeyData.value || !journeyData.value.modules) return;
+      
       const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
-      savedProgress.modules?.forEach((savedModule: any, moduleIndex: number) => {
-        savedModule.podcasts.forEach((savedPodcast: any, podcastIndex: number) => {
+      
+      if (!savedProgress.modules) return;
+      
+      savedProgress.modules.forEach((savedModule: any, moduleIndex: number) => {
+        if (!journeyData.value.modules[moduleIndex]) return;
+        
+        savedModule.podcasts?.forEach((savedPodcast: any, podcastIndex: number) => {
+          if (!journeyData.value.modules[moduleIndex].podcasts[podcastIndex]) return;
+          
           journeyData.value.modules[moduleIndex].podcasts[podcastIndex].podcastStage = savedPodcast.podcastStage;
         });
       });
@@ -94,19 +177,28 @@ export default defineComponent({
     // Configuración de carga condicional con simulación de API
     const fetchJourneyData = async () => {
       isLoading.value = true;
+      
+      const courseId = route.query.course as string;
+      
       if (useMockData) {
-        journeyData.value = JSON.parse(JSON.stringify(FinanzasJourneyMock));
+        if (typeof courseId === 'string' && journeyMocks[courseId]) {
+          journeyData.value = journeyMocks[courseId];
+        } else {
+          // Si no hay courseId en la URL, usar el mock por defecto
+          journeyData.value = ComoFuncionaElSistemaFinanieroJourneyMock;
+        }
       } else {
-        // Simulación de una llamada a la API
         try {
-          const response = await fetch('https://api.example.com/journey'); // Cambiar URL a la de tu API
+          // Aquí iría la llamada real a la API
+          const response = await fetch('https://api.example.com/journey'); 
           if (!response.ok) throw new Error('Error al obtener los datos');
           journeyData.value = await response.json();
         } catch (error) {
           console.error('Error en la llamada a la API:', error);
-          journeyData.value = FinanzasJourneyMock; // Fallback en caso de error
+          journeyData.value = ComoFuncionaElSistemaFinanieroJourneyMock;
         }
       }
+      
       isLoading.value = false;
       applyProgress();
     };
@@ -128,24 +220,42 @@ export default defineComponent({
     };
 
     const handlePodcastClick = (podcast: any, moduleIndex: number, podcastIndex: number) => {
-      //if (podcast.podcastStage === 'enabled' || podcast.podcastStage === 'completed') {
-        router.push({
+      
+      // Guarda el courseId actual en localStorage
+      const courseId = route.query.course as string;
+      if (courseId) {
+        localStorage.setItem('currentCourseId', courseId);
+      }
+      
+      router.push({
           path: '/podcast',
           query: {
             title: podcast.title,
             description: podcast.description,
             audioLink: podcast.audioLink,
             imageLink: podcast.imageLink,
-            moduleIndex: moduleIndex.toString(), // Asegúrate de pasar moduleIndex correctamente
+            moduleIndex: moduleIndex.toString(),
             podcastIndex: podcastIndex.toString(),
           },
         });
-      //}
     };
 
-    onMounted(() => {
-      initializeProgress();
-      fetchJourneyData(); // Ejecuta fetch solo una vez después de inicializar
+     onMounted(async () => {
+      isLoading.value = true;
+      try {
+        // Primero, cargar los datos
+        await fetchJourneyData();
+        
+        // Luego inicializar el progreso solo si hay datos
+        if (journeyData.value && journeyData.value.modules) {
+          initializeProgress();
+          applyProgress();  // Asegúrate de que esto ocurra después de initializeProgress
+        }
+      } catch (error) {
+        console.error("Error al cargar la página:", error);
+      } finally {
+        isLoading.value = false;
+      }
     });
 
     return {
@@ -157,6 +267,10 @@ export default defineComponent({
       iconStar,
       iconPlay,
       navigateToHome,
+      breadcrumbRoutes,
+      getPodcastIcon,
+      handleFeedback,
+      completedPodcastsCount,
     };
   },
 });
@@ -263,52 +377,15 @@ export default defineComponent({
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-.completed-title {
+.podcast-title {
   font-size: 0.68rem; /* Tamaño de letra más pequeño */
   color: #666; /* Mismo tono que los demás textos */
   text-align: center;
   margin-top: 0.25rem;
+  margin-left: 4px; /* Añade espacio al lado izquierdo */
   white-space: normal; /* Permite que el texto se ajuste a múltiples líneas si es necesario */
   display: block; /* Coloca el título debajo del círculo */
-  max-width: 140px; /* Limita el ancho para mantenerlo alineado con el círculo */
+  max-width: 160px; /* Limita el ancho para mantenerlo alineado con el círculo */
 }
-
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 1rem;
-  width: 100%; /* Asegura que ocupe todo el ancho disponible */
-  max-width: 700px; /* Limita el ancho en pantallas grandes */
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 10px; /* Agrega espacio para evitar cortes en los bordes */
-}
-
-.breadcrumb button,
-.breadcrumb .breadcrumb-text {
-  background-color: #F3F3F3;
-  color: #555555;
-  font-weight: bold;
-  padding: 4px 10px; /* Espaciado equilibrado para pantallas de todos los tamaños */
-  border-radius: 15px;
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0; /* Evita que los botones se reduzcan demasiado en pantallas pequeñas */
-}
-
-.breadcrumb button:hover {
-  color: #333333; /* Gris más oscuro en hover */
-  background-color: #e0e0e0;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para dar presencia */
-}
-
-.breadcrumb-separator {
-  color: #E1E1E1;
-  font-weight: bold;
-  font-size: 1.5rem;
-  flex-shrink: 0; /* Mantiene el tamaño del separador */
-}
-
 
 </style>

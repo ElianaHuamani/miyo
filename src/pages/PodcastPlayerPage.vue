@@ -1,16 +1,9 @@
 <template>
   <div class="podcast-player-wrapper">
     <br>
-    
-    <!-- Breadcrumb con separador personalizado -->
-    <nav aria-label="breadcrumb" class="breadcrumb">
-      <button class="btn" @click="handleBack">Ruta</button>
-      <span class="breadcrumb-separator">&gt;</span>
-      <span>Módulo {{ moduleIndex + 1 }} - Podcast {{ podcastIndex + 1 }}</span>
-    </nav>
+    <Breadcrumb :routes="breadcrumbRoutes" />
     
     <img :src="imageLink" alt="Podcast cover" class="podcast-image" />
-    <p class="description">{{ description }}</p><br>
     <audio controls ref="audioElement" class="audio-player">
       <source :src="audioLink" type="audio/mpeg" />
       Tu navegador no soporta la reproducción de audio.
@@ -28,14 +21,16 @@
 </template>
 
 
-
-
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import Breadcrumb from '@/common/components/Breadcrumb.vue';
 
 export default defineComponent({
   name: 'PodcastPlayerPage',
+  components: {
+    Breadcrumb,
+  },
   setup() {
     const route = useRoute();
     const router = useRouter();
@@ -52,6 +47,13 @@ export default defineComponent({
     const progress = ref(0);
     const isNextEnabled = ref(false);
     const hasPreviousPodcast = ref(false);
+
+    const courseId = localStorage.getItem('currentCourseId');
+    const breadcrumbRoutes = ref([
+      { label: 'Inicio', path: '/' },
+      { label: 'Ruta', path: courseId ? `/journey?course=${courseId}` : '/journey' },
+      { label: `Módulo ${moduleIndex.value + 1} - Podcast ${podcastIndex.value + 1}`, path: '' }
+    ]);
 
     const loadPodcastData = () => {
       const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
@@ -80,8 +82,6 @@ export default defineComponent({
             ]
           });
         }
-
-
       }
     };
 
@@ -111,7 +111,6 @@ export default defineComponent({
 
 
     const checkHasPreviousPodcast = () => {
-      // Verificar si hay un podcast anterior
       hasPreviousPodcast.value = podcastIndex.value > 0 || moduleIndex.value > 0;
     };
 
@@ -153,7 +152,14 @@ export default defineComponent({
     };
 
     const handleBack = () => {
-      router.push('/journey');
+      // Recupera el courseId del localStorage
+      const courseId = localStorage.getItem('currentCourseId');
+      
+      if (courseId) {
+        router.push(`/journey?course=${courseId}`);
+      } else {
+        router.push('/journey');
+      }
     };
 
     const handleNextPodcast = () => {
@@ -225,7 +231,8 @@ export default defineComponent({
       handlePreviousPodcast,
       progress,
       moduleIndex,
-      podcastIndex
+      podcastIndex,
+      breadcrumbRoutes,
     };
   },
 });

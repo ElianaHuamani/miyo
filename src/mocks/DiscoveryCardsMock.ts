@@ -1,22 +1,44 @@
-import journeyfinanzaspersonales from '@/assets/images/journey-finanzas-personales.svg';
-import journeyfinanzasinveriones from '@/assets/images/journey-finanzas-inveriones.svg';
-import journeyfinanzasplanificacion from '@/assets/images/journey-finanzas-planificacion.svg';
-import journeyfinanzaspsicologiadinero from '@/assets/images/journey-finanzas-psicologia-dinero.svg';
-import journeycrecimientoautoconocimiento from '@/assets/images/journey-crecimiento-autoconocimiento.svg';
-import journeycrecimientocomunicacion from '@/assets/images/journey-crecimiento-comunicacion.svg';
-import journeycrecimientohabitos from '@/assets/images/journey-crecimiento-habitos.svg';
-import journeycrecimientomentalidad from '@/assets/images/journey-crecimiento-mentalidad.svg';
-import journeycrecimientoproposito from '@/assets/images/journey-crecimiento-proposito.svg';
+import { ICard } from '@/services/backend/ICard';
 
-export const finanzasSectionMock = [
+
+import journeyfinanzasdesentranandocreenciasfinancieras from '@/assets/images/coursecovers/journey-finanzas-desentranando-creencias-financieras.svg';
+import journeyfinanzascomofuncionaelsistemafinanciero from '@/assets/images/coursecovers/journey-finanzas-como-funciona-el-sistema-financiero.svg';
+import journeyfinanzasconstruyetulibertadfinanciera from '@/assets/images/coursecovers/journey-finanzas-construye-tu-libertad-financiera.svg';
+import journeyfinanzasinveriones from '@/assets/images/coursecovers/journey-finanzas-inveriones.svg';
+import journeyfinanzaspsicologiadinero from '@/assets/images/coursecovers/journey-finanzas-psicologia-dinero.svg';
+import journeycrecimientoautoconocimiento from '@/assets/images/coursecovers/journey-crecimiento-autoconocimiento.svg';
+import journeycrecimientocomunicacion from '@/assets/images/coursecovers/journey-crecimiento-comunicacion.svg';
+import journeycrecimientohabitos from '@/assets/images/coursecovers/journey-crecimiento-habitos.svg';
+import journeycrecimientomentalidad from '@/assets/images/coursecovers/journey-crecimiento-mentalidad.svg';
+import journeycrecimientoproposito from '@/assets/images/coursecovers/journey-crecimiento-proposito.svg';
+
+export const finanzasSectionMock : ICard[] = [
     { 
-      title: 'Finanzas Personales', 
-      description: '¿Te gustaría dominar tus finanzas, pero no tienes tiempo para leer libros o tomar clases largas? ¡Este curso es para ti! En Finanzas en Claro, aprenderás a gestionar tu dinero de forma sencilla, práctica y entretenida, a través de episodios cortos y dinámicos.', 
-      image: journeyfinanzaspersonales, 
-      link: '/journey',
+      title: '', 
+      description: '', 
+      image: journeyfinanzasdesentranandocreenciasfinancieras, 
+      link: '/journey?course=finanzas-desentranando-creencias-financieras',
       isActive: true,
-      timeValue: '8:30 min',
-      audioCount: 6,
+      timeValue: '8:06 min',
+      audioCount: 10,
+    },
+    {
+      title: '¿Cómo funciona el sistema financiero?', 
+      description: '', 
+      image: journeyfinanzascomofuncionaelsistemafinanciero, 
+      link: '/journey?course=finanzas-como-funciona-el-sistema-financiero',
+      isActive: true,
+      timeValue: '11:27 min',
+      audioCount: 10,
+    },
+        { 
+      title: 'Construye tu libertad financiera', 
+      description: '', 
+      image: journeyfinanzasconstruyetulibertadfinanciera, 
+      link: '/journey?course=finanzas-construye-tu-libertad-financiera',
+      isActive: true,
+      timeValue: '13:09 min',
+      audioCount: 12,
     },
     {
       title: 'Inversiones para principiantes', 
@@ -27,15 +49,7 @@ export const finanzasSectionMock = [
       timeValue: '13 min',
       audioCount: 18,
     },
-    { 
-      title: 'Planificación para libertad financiera', 
-      description: '📈 ¡Imagina vivir sin preocuparte por el dinero! Aquí aprenderás a diseñar un plan que te acerque a la libertad financiera, para que puedas disfrutar de lo que realmente te apasiona. ¡Toma el control de tu futuro hoy! 🗝️', 
-      image: journeyfinanzasplanificacion, 
-      link: '',
-      isActive: false,
-      timeValue: '15 min',
-      audioCount: 18,
-    },
+    
     { 
       title: 'Psicología del dinero', 
       description: '🧠💰 ¿Sabías que nuestra relación con el dinero afecta nuestras decisiones financieras? Este curso te ayudará a comprender cómo piensas sobre el dinero y a mejorar tu relación con él para alcanzar tus metas. ¡Transforma tu mente y tu bolsillo! 💡', 
@@ -47,7 +61,7 @@ export const finanzasSectionMock = [
     }
   ];
 
-  export const crecimientoSectionMock = [
+  export const crecimientoSectionMock : ICard[] = [
     { 
       title: 'Autoconocimiento y gestión emocional', 
       description: '🌿❤️ Entenderte a ti mismo es clave para una vida equilibrada. Aprende a gestionar tus emociones, a conocerte mejor y a construir una versión más fuerte y serena de ti. ¡Haz las paces contigo mismo y empieza a florecer! 🌱', 
