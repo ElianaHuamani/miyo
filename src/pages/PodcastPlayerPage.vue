@@ -3,9 +3,21 @@
     <br>
     <Breadcrumb :routes="breadcrumbRoutes" />
     
-    <img :src="imageLink" alt="Podcast cover" class="podcast-image" />
-    <audio controls ref="audioElement" class="audio-player">
-      <source :src="audioLink" type="audio/mpeg" />
+    <img loading="lazy" :src="imageLink" alt="Podcast cover" class="podcast-image" />
+
+    <!-- Indicador de carga del audio -->
+    <div v-if="isLoading" class="loading-indicator">
+      <div class="spinner"></div>
+      <div class="loading-text">Cargando audio...</div>
+    </div>
+    
+    <!-- Mensaje de error -->
+    <div v-if="errorMessage" class="error-message">
+      {{ errorMessage }}
+      <button @click="loadPodcastData" class="retry-button">Reintentar</button>
+    </div>
+    
+    <audio controls ref="audioElement" class="audio-player" :src="audioSrc">
       Tu navegador no soporta la reproducción de audio.
     </audio>
     
@@ -25,6 +37,8 @@
 import { defineComponent, ref, onMounted, onUnmounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Breadcrumb from '@/common/components/Breadcrumb.vue';
+import AudioCacheService from '@/services/cache/audioCacheService';
+
 
 export default defineComponent({
   name: 'PodcastPlayerPage',
@@ -42,6 +56,11 @@ export default defineComponent({
     const description = ref('');
     const audioLink = ref('');
     const imageLink = ref('');
+
+    const audioSrc = ref(''); // Nueva referencia para el blob URL
+    const isLoading = ref(false); // Indicador de carga
+    const loadingProgress = ref(0); // Progreso de carga
+    const errorMessage = ref(''); // Mensaje de error
 
     const audioElement = ref<HTMLAudioElement | null>(null);
     const progress = ref(0);
@@ -63,6 +82,49 @@ export default defineComponent({
       ];
     };
 
+    // Función para cargar el audio usando el servicio de caché
+    const loadAudioWithCache = async (url: string) => {
+      if (!url) return;
+      
+      try {
+        isLoading.value = true;
+        errorMessage.value = '';
+        
+        // Revocar cualquier URL de objeto anterior para liberar memoria
+        if (audioSrc.value && audioSrc.value.startsWith('blob:')) {
+          URL.revokeObjectURL(audioSrc.value);
+        }
+        
+        // Iniciar la carga con el servicio de caché
+        console.log(`Cargando audio: ${url}`);
+        const blob = await AudioCacheService.loadAudio(url);
+        
+        // Crear un URL de objeto a partir del blob
+        const blobUrl = URL.createObjectURL(blob);
+        audioSrc.value = blobUrl;
+        
+        console.log(`Audio cargado y listo para reproducir: ${blobUrl}`);
+        
+        // Si el elemento de audio ya existe, actualizar su src
+        if (audioElement.value) {
+          audioElement.value.src = blobUrl;
+          resetAudio();
+        }
+        
+        isLoading.value = false;
+      } catch (error) {
+        console.error('Error al cargar audio con caché:', error);
+        errorMessage.value = 'Error al cargar el audio. Inténtalo de nuevo.';
+        isLoading.value = false;
+        
+        // En caso de error, intentar reproducir directamente desde la URL original
+        if (audioElement.value) {
+          audioElement.value.src = url;
+          resetAudio();
+        }
+      }
+    };
+
     const loadPodcastData = () => {
       const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
       const podcast = savedProgress.modules[moduleIndex.value]?.podcasts[podcastIndex.value];
@@ -71,6 +133,10 @@ export default defineComponent({
         description.value = podcast.description;
         audioLink.value = podcast.audioLink;
         imageLink.value = podcast.imageLink;
+
+        // Cargar el audio con caché
+        loadAudioWithCache(podcast.audioLink);
+
         resetAudio();
         checkHasPreviousPodcast();
         updateBreadcrumb();
@@ -117,6 +183,30 @@ export default defineComponent({
         }, { once: true }); // once: true asegura que el evento se dispare una sola vez
       }
     };
+
+    // Función para precachear el siguiente podcast
+    const precacheNextPodcast = () => {
+      const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
+      let nextPodcastUrl = null;
+      
+      // Verificar si hay un siguiente podcast en el mismo módulo
+      if (savedProgress.modules[moduleIndex.value]?.podcasts[podcastIndex.value + 1]) {
+        nextPodcastUrl = savedProgress.modules[moduleIndex.value].podcasts[podcastIndex.value + 1].audioLink;
+      } 
+      // Si no, verificar si hay un siguiente módulo con podcasts
+      else if (savedProgress.modules[moduleIndex.value + 1]?.podcasts[0]) {
+        nextPodcastUrl = savedProgress.modules[moduleIndex.value + 1].podcasts[0].audioLink;
+      }
+      
+      // Si encontramos una URL del siguiente podcast, precachearla
+      if (nextPodcastUrl) {
+        console.log(`Precacheando siguiente podcast: ${nextPodcastUrl}`);
+        AudioCacheService.addToCache(nextPodcastUrl).catch(error => 
+          console.error('Error al precachear siguiente podcast:', error)
+        );
+      }
+    };
+
 
     const handleAudioEnded = () => {
       if (isLastPodcast()) {
@@ -239,6 +329,11 @@ export default defineComponent({
         audioElement.value.addEventListener('timeupdate', trackProgress);
         audioElement.value.addEventListener('ended', handleAudioEnded);
       }
+
+      // Precachear el siguiente podcast después de cargar el actual
+      setTimeout(() => {
+        precacheNextPodcast();
+      }, 5000); // Esperar 5 segundos para no interferir con la carga del podcast actual
     });
 
     onUnmounted(() => {
@@ -247,6 +342,11 @@ export default defineComponent({
         audioElement.value.removeEventListener('ended', handleAudioEnded);
         // Eliminar cualquier otro event listener que pueda estar causando problemas
         audioElement.value.pause();
+      }
+
+      // Limpiar cualquier URL de objeto al desmontar
+      if (audioSrc.value && audioSrc.value.startsWith('blob:')) {
+        URL.revokeObjectURL(audioSrc.value);
       }
     });
 
@@ -259,6 +359,7 @@ export default defineComponent({
       description,
       audioLink,
       imageLink,
+      audioSrc,
       audioElement,
       isNextEnabled,
       hasPreviousPodcast,
@@ -269,6 +370,10 @@ export default defineComponent({
       moduleIndex,
       podcastIndex,
       breadcrumbRoutes,
+      isLoading, // Para indicador de carga
+      loadingProgress, // Para barra de progreso de carga
+      errorMessage, // Para mostrar errores
+      loadPodcastData,
     };
   },
 });
