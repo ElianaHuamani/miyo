@@ -26,7 +26,7 @@
             <img :src="getPodcastIcon[podcast.podcastStage]" :alt="podcast.podcastStage + ' Icon'" />
           </div>
           
-          <span class="completed-title">{{ podcast.title }}</span>
+          <span class="podcast-title">{{ podcast.title }}</span>
         </div>
       </div>
 
@@ -377,14 +377,15 @@ export default defineComponent({
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-.completed-title {
+.podcast-title {
   font-size: 0.68rem; /* Tamaño de letra más pequeño */
   color: #666; /* Mismo tono que los demás textos */
   text-align: center;
   margin-top: 0.25rem;
+  margin-left: 4px; /* Añade espacio al lado izquierdo */
   white-space: normal; /* Permite que el texto se ajuste a múltiples líneas si es necesario */
   display: block; /* Coloca el título debajo del círculo */
-  max-width: 140px; /* Limita el ancho para mantenerlo alineado con el círculo */
+  max-width: 160px; /* Limita el ancho para mantenerlo alineado con el círculo */
 }
 
 </style>

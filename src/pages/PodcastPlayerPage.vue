@@ -1,16 +1,9 @@
 <template>
   <div class="podcast-player-wrapper">
     <br>
-    
-    <!-- Breadcrumb con separador personalizado -->
-    <nav aria-label="breadcrumb" class="breadcrumb">
-      <button class="btn" @click="handleBack">Ruta</button>
-      <span class="breadcrumb-separator">&gt;</span>
-      <span>Módulo {{ moduleIndex + 1 }} - Podcast {{ podcastIndex + 1 }}</span>
-    </nav>
+    <Breadcrumb :routes="breadcrumbRoutes" />
     
     <img :src="imageLink" alt="Podcast cover" class="podcast-image" />
-    <p class="description">{{ description }}</p><br>
     <audio controls ref="audioElement" class="audio-player">
       <source :src="audioLink" type="audio/mpeg" />
       Tu navegador no soporta la reproducción de audio.
@@ -54,6 +47,13 @@ export default defineComponent({
     const progress = ref(0);
     const isNextEnabled = ref(false);
     const hasPreviousPodcast = ref(false);
+
+    const courseId = localStorage.getItem('currentCourseId');
+    const breadcrumbRoutes = ref([
+      { label: 'Inicio', path: '/' },
+      { label: 'Ruta', path: courseId ? `/journey?course=${courseId}` : '/journey' },
+      { label: `Módulo ${moduleIndex.value + 1} - Podcast ${podcastIndex.value + 1}`, path: '' }
+    ]);
 
     const loadPodcastData = () => {
       const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
@@ -231,7 +231,8 @@ export default defineComponent({
       handlePreviousPodcast,
       progress,
       moduleIndex,
-      podcastIndex
+      podcastIndex,
+      breadcrumbRoutes,
     };
   },
 });
