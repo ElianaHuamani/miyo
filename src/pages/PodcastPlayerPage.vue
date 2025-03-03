@@ -22,7 +22,7 @@
 
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, watch } from 'vue';
+import { defineComponent, ref, onMounted, onUnmounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Breadcrumb from '@/common/components/Breadcrumb.vue';
 
@@ -55,6 +55,14 @@ export default defineComponent({
       { label: `Módulo ${moduleIndex.value + 1} - Podcast ${podcastIndex.value + 1}`, path: '' }
     ]);
 
+    const updateBreadcrumb = () => {
+      breadcrumbRoutes.value = [
+        { label: 'Inicio', path: '/' },
+        { label: 'Ruta', path: courseId ? `/journey?course=${courseId}` : '/journey' },
+        { label: `Módulo ${moduleIndex.value + 1} - Podcast ${podcastIndex.value + 1}`, path: '' }
+      ];
+    };
+
     const loadPodcastData = () => {
       const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
       const podcast = savedProgress.modules[moduleIndex.value]?.podcasts[podcastIndex.value];
@@ -65,6 +73,7 @@ export default defineComponent({
         imageLink.value = podcast.imageLink;
         resetAudio();
         checkHasPreviousPodcast();
+        updateBreadcrumb();
 
         // Configura la sesión de medios si es compatible con el navegador
         if ('mediaSession' in navigator) {
@@ -85,17 +94,27 @@ export default defineComponent({
       }
     };
 
+    // Modificación de la función resetAudio para manejar la reproducción adecuadamente
     const resetAudio = () => {
       if (audioElement.value) {
+        // Detener cualquier reproducción en curso
+        audioElement.value.pause();
+        
+        // Cargar el nuevo audio
         audioElement.value.load();
         audioElement.value.currentTime = 0;
         isNextEnabled.value = false;
         progress.value = 0;
 
-        // Reproducir automáticamente el audio
-        audioElement.value.play().catch((error) => {
-          console.log('Fallo en la reproducción automática:', error);
-        });
+        // En lugar de reproducir inmediatamente, esperar a que el audio esté listo
+        audioElement.value.addEventListener('canplaythrough', function onCanPlay() {
+          // Reproducir sólo si el podcast actual sigue siendo el mismo
+          audioElement.value?.play().catch((error) => {
+            console.log('Fallo en la reproducción automática:', error);
+          });
+          // Eliminar el listener para evitar múltiples reproducciones
+          audioElement.value?.removeEventListener('canplaythrough', onCanPlay);
+        }, { once: true }); // once: true asegura que el evento se dispare una sola vez
       }
     };
 
@@ -152,9 +171,7 @@ export default defineComponent({
     };
 
     const handleBack = () => {
-      // Recupera el courseId del localStorage
       const courseId = localStorage.getItem('currentCourseId');
-      
       if (courseId) {
         router.push(`/journey?course=${courseId}`);
       } else {
@@ -163,6 +180,11 @@ export default defineComponent({
     };
 
     const handleNextPodcast = () => {
+      // Pausar el audio actual para evitar conflictos
+      if (audioElement.value) {
+        audioElement.value.pause();
+      }
+
       const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}');
       const nextPodcastIndex = podcastIndex.value + 1;
 
@@ -187,6 +209,11 @@ export default defineComponent({
 
 
     const handlePreviousPodcast = () => {
+      // Pausar el audio actual para evitar conflictos
+      if (audioElement.value) {
+        audioElement.value.pause();
+      }
+
       const savedProgress = JSON.parse(localStorage.getItem('podcastProgress') || '{}'); // Añade esta línea para definir savedProgress
       if (podcastIndex.value > 0) {
         podcastIndex.value -= 1;
@@ -211,6 +238,15 @@ export default defineComponent({
       if (audioElement.value) {
         audioElement.value.addEventListener('timeupdate', trackProgress);
         audioElement.value.addEventListener('ended', handleAudioEnded);
+      }
+    });
+
+    onUnmounted(() => {
+      if (audioElement.value) {
+        audioElement.value.removeEventListener('timeupdate', trackProgress);
+        audioElement.value.removeEventListener('ended', handleAudioEnded);
+        // Eliminar cualquier otro event listener que pueda estar causando problemas
+        audioElement.value.pause();
       }
     });
 
