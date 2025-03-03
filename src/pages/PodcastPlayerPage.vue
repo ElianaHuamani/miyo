@@ -37,7 +37,7 @@
 import { defineComponent, ref, onMounted, onUnmounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Breadcrumb from '@/common/components/Breadcrumb.vue';
-import AudioCacheService from '@/services/cache/audioCacheService';
+import AudioCacheService from '@/services/cache/AudioCacheService';
 
 
 export default defineComponent({
