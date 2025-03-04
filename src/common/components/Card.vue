@@ -4,7 +4,7 @@
     @click="goToPage"
   >
       <!-- Imagen -->
-      <img :src="imageSrc" alt="Card Image" class="w-full h-48 object-cover mb-4 rounded-lg" />    
+      <img :src="imageSrc" loading="lazy" alt="Card Image" class="w-full h-48 object-cover mb-4 rounded-lg" />    
       <br>
 
       <div class="flex justify-between items-center px-4 text-gray-600">
