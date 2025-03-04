@@ -21,6 +21,8 @@ export const finanzasSectionMock : ICard[] = [
       isActive: true,
       timeValue: '8:06 min',
       audioCount: 10,
+      isOurCreation: false,
+      creatorName: 'Victor Acosta',
     },
     {
       title: '¿Cómo funciona el sistema financiero?', 
@@ -30,6 +32,8 @@ export const finanzasSectionMock : ICard[] = [
       isActive: true,
       timeValue: '11:27 min',
       audioCount: 10,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
         { 
       title: 'Construye tu libertad financiera', 
@@ -39,6 +43,8 @@ export const finanzasSectionMock : ICard[] = [
       isActive: true,
       timeValue: '13:09 min',
       audioCount: 12,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     {
       title: 'Inversiones para principiantes', 
@@ -48,6 +54,8 @@ export const finanzasSectionMock : ICard[] = [
       isActive: false,
       timeValue: '13 min',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     
     { 
@@ -58,6 +66,8 @@ export const finanzasSectionMock : ICard[] = [
       isActive: false,
       timeValue: '45 min',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     }
   ];
 
@@ -70,6 +80,8 @@ export const finanzasSectionMock : ICard[] = [
       isActive: false,
       timeValue: '20 min',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     {
       title: 'Comunicación asertiva', 
@@ -79,6 +91,8 @@ export const finanzasSectionMock : ICard[] = [
       isActive: false,
       timeValue: '17 min',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     { 
       title: 'Desarrollo de habitos poderosos', 
@@ -88,6 +102,8 @@ export const finanzasSectionMock : ICard[] = [
       isActive: false,
       timeValue: '13',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     { 
       title: 'Mentalidad de crecimiento', 
@@ -97,6 +113,8 @@ export const finanzasSectionMock : ICard[] = [
       isActive: false,
       timeValue: '36 min',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     { 
       title: 'Proposito de vida y definición de metas', 
@@ -106,6 +124,8 @@ export const finanzasSectionMock : ICard[] = [
       isActive: false,
       timeValue: '20 min',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     }
   ];
   
