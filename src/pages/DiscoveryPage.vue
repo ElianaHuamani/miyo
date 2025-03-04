@@ -43,7 +43,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import Carousel from '@/common/components/Carousel.vue';
-import Card from '@/components/card/Card.vue';
+import Card from '@/common/components/Card.vue';
 import { finanzasSectionMock, crecimientoSectionMock  } from '@/mocks/DiscoveryCardsMock.ts';
 import { type ICard } from '@/services/backend/ICard.ts';
 
