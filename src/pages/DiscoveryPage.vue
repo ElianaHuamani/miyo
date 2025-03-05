@@ -15,6 +15,8 @@
           :isActive="card.isActive"
           :audioCount="card.audioCount"
           :timeValue="card.timeValue"
+          :isOurCreation="card.isOurCreation"
+          :creatorName="card.creatorName"
         />
       </Carousel>
     </section>
@@ -34,6 +36,8 @@
           :isActive="card.isActive"
           :audioCount="card.audioCount"
           :timeValue="card.timeValue"
+          :isOurCreation="card.isOurCreation"
+          :creatorName="card.creatorName"
         />
       </Carousel>
     </section>

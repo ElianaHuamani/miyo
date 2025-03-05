@@ -60,6 +60,7 @@ import { IJourney } from '@/services/backend/IJourney';
 import { ComoFuncionaElSistemaFinanieroJourneyMock } from '@/mocks/journeys/ComoFuncionaElSistemaFinanieroJourneyMock.ts';
 import { ConstruyeTuLibertadFinancieraJourneyMock } from '@/mocks/journeys/ConstruyeTuLibertadFinancieraJourneyMock.ts';
 import { DesentranandoCreenciasFinancierasJourneyMock } from '@/mocks/journeys/DesentranandoCreenciasFinancierasJourneyMock.ts';
+import { CreenciasLimitantesMock } from '@/mocks/journeys/CreenciasLimitantesMock.ts';
 import iconBlock from '@/assets/icons/icono-block.svg';
 import iconStar from '@/assets/icons/icono-start.svg';
 import iconPlay from '@/assets/icons/icono-play.svg';
@@ -81,6 +82,7 @@ export default defineComponent({
       'finanzas-desentranando-creencias-financieras': DesentranandoCreenciasFinancierasJourneyMock,
       'finanzas-como-funciona-el-sistema-financiero': ComoFuncionaElSistemaFinanieroJourneyMock,
       'finanzas-construye-tu-libertad-financiera': ConstruyeTuLibertadFinancieraJourneyMock,
+      'crecimientopersonal-creencias-limitantes': CreenciasLimitantesMock,
     };
     
     const handleFeedback = () => {

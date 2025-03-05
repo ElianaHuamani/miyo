@@ -6,4 +6,6 @@ export interface ICard {
     isActive: boolean;
     timeValue: string;
     audioCount: number;
+    isOurCreation: boolean;
+    creatorName: string;
 }

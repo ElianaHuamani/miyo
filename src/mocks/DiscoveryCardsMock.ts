@@ -11,6 +11,7 @@ import journeycrecimientocomunicacion from '@/assets/images/coursecovers/journey
 import journeycrecimientohabitos from '@/assets/images/coursecovers/journey-crecimiento-habitos.svg';
 import journeycrecimientomentalidad from '@/assets/images/coursecovers/journey-crecimiento-mentalidad.svg';
 import journeycrecimientoproposito from '@/assets/images/coursecovers/journey-crecimiento-proposito.svg';
+import journeycrecimientopersonalcreenciaslimitantes from '@/assets/images/coursecovers/journey-crecimientopersonal-creenciaslimitantes.svg';
 
 export const finanzasSectionMock : ICard[] = [
     { 
@@ -21,6 +22,8 @@ export const finanzasSectionMock : ICard[] = [
       isActive: true,
       timeValue: '8:06 min',
       audioCount: 10,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     {
       title: '¿Cómo funciona el sistema financiero?', 
@@ -30,6 +33,8 @@ export const finanzasSectionMock : ICard[] = [
       isActive: true,
       timeValue: '11:27 min',
       audioCount: 10,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
         { 
       title: 'Construye tu libertad financiera', 
@@ -39,73 +44,100 @@ export const finanzasSectionMock : ICard[] = [
       isActive: true,
       timeValue: '13:09 min',
       audioCount: 12,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     {
       title: 'Inversiones para principiantes', 
-      description: '💸 ¿Te gustaría poner tu dinero a trabajar para ti? En este curso, descubrirás los conceptos clave de las inversiones de una forma simple y práctica. ¡Empieza a invertir sin miedo y con confianza! 🚀', 
+      description: '', 
       image: journeyfinanzasinveriones, 
       link: '',
       isActive: false,
       timeValue: '13 min',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     
     { 
       title: 'Psicología del dinero', 
-      description: '🧠💰 ¿Sabías que nuestra relación con el dinero afecta nuestras decisiones financieras? Este curso te ayudará a comprender cómo piensas sobre el dinero y a mejorar tu relación con él para alcanzar tus metas. ¡Transforma tu mente y tu bolsillo! 💡', 
+      description: '', 
       image: journeyfinanzaspsicologiadinero, 
       link: '',
       isActive: false,
       timeValue: '45 min',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     }
   ];
 
   export const crecimientoSectionMock : ICard[] = [
     { 
+      title: 'Hackea tu mente: Desbloquea creencias limitantes', 
+      description: '', 
+      image: journeycrecimientopersonalcreenciaslimitantes, 
+      link: '/journey?course=crecimientopersonal-creencias-limitantes',
+      isActive: true,
+      timeValue: '60:15 min',
+      audioCount: 21,
+      isOurCreation: false,
+      creatorName: 'Victor Acosta',
+    },
+    { 
       title: 'Autoconocimiento y gestión emocional', 
-      description: '🌿❤️ Entenderte a ti mismo es clave para una vida equilibrada. Aprende a gestionar tus emociones, a conocerte mejor y a construir una versión más fuerte y serena de ti. ¡Haz las paces contigo mismo y empieza a florecer! 🌱', 
+      description: '', 
       image: journeycrecimientoautoconocimiento, 
       link: '',
       isActive: false,
       timeValue: '20 min',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     {
       title: 'Comunicación asertiva', 
-      description: '🗣️🤝 ¿Te cuesta expresar lo que piensas o sientes? Descubre cómo comunicarte de manera clara y respetuosa, mientras construyes relaciones más sanas y efectivas. ¡Hablar con confianza nunca fue tan fácil! 📢', 
+      description: '', 
       image: journeycrecimientocomunicacion, 
       link: '',
       isActive: false,
       timeValue: '17 min',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     { 
       title: 'Desarrollo de habitos poderosos', 
-      description: '🔄💪 Los pequeños hábitos diarios pueden generar grandes cambios. Aprende cómo crear y mantener hábitos que te acerquen a tus objetivos más ambiciosos. ¡Tú tienes el poder de mejorar tu vida, un paso a la vez! 🏆', 
+      description: '', 
       image: journeycrecimientohabitos, 
       link: '',
       isActive: false,
       timeValue: '13',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     { 
       title: 'Mentalidad de crecimiento', 
-      description: '🚀🧠 ¿Te gustaría ver cada reto como una oportunidad? En este curso aprenderás a desarrollar una mentalidad de crecimiento que te permitirá aprender, mejorar y triunfar en cualquier situación. ¡El éxito empieza en tu mente! 💡', 
+      description: '', 
       image: journeycrecimientomentalidad, 
       link: '',
       isActive: false,
       timeValue: '36 min',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     },
     { 
       title: 'Proposito de vida y definición de metas', 
-      description: 'Tes🎯✨ ¿Te sientes sin rumbo? Descubre cómo identificar tu propósito de vida y trazar metas claras que te motiven a seguir adelante. ¡Conéctate con lo que realmente te mueve y da el siguiente paso hacia una vida más plena! 🌟t3', 
+      description: '', 
       image: journeycrecimientoproposito, 
       link: '',
       isActive: false,
       timeValue: '20 min',
       audioCount: 18,
+      isOurCreation: true,
+      creatorName: 'Miyo',
     }
   ];
   

@@ -3,12 +3,23 @@
     class="card p-4 border rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition"
     @click="goToPage"
   >
-      <!-- Imagen -->
-      <img :src="imageSrc" loading="lazy" alt="Card Image" class="w-full h-48 object-cover mb-4 rounded-lg" />    
-      <br>
+    <!-- Imagen -->
+    <img :src="imageSrc" loading="lazy" alt="Card Image" class="w-full h-48 object-cover mb-4 rounded-lg" />    
+    
+    <!-- Badge de creador - movido fuera del div de iconos -->
+    <div class="flex items-center mb-3">
+      <span class="text-sm text-gray-600 mr-2">Creado por:</span>
+      <div class="flex items-center" 
+          :class="isOurCreation ? 'bg-blue-100 rounded-full px-3 py-1' : 'bg-purple-100 rounded-full px-3 py-1'">
+        <span class="text-xs font-medium" 
+              :class="isOurCreation ? 'text-blue-700' : 'text-purple-700'">
+          {{ creatorName }}
+        </span>
+      </div>
+    </div>
 
-      <div class="flex justify-between items-center px-4 text-gray-600">
-      
+    <!-- Div de iconos separado del badge -->
+    <div class="flex justify-between items-center px-4 text-gray-600">
       <!-- Icono de reloj y número (izquierda) -->
       <div class="flex items-center gap-2">
         <img src="@/assets/icons/icono-clock.svg" alt="Clock Icon" class="w-5 h-5 max-w-[20px] max-h-[20px]" />
@@ -60,22 +71,26 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    isOurCreation: {
+      type: Boolean,
+      required: true,
+    },
+    creatorName: {
+      type: String,
+      required: true,
+    }
   },
   setup(props) {
     const router = useRouter(); // Usamos Vue Router
 
-    // Lógica para cargar la imagen desde las props o usar la imagen por defecto
     const imageSrc = computed(() => props.image);
-
-
-    // Lógica para truncar la descripción si supera los 100 caracteres
+    
     const truncatedDescription = computed(() => {
       return props.description.length > 100
         ? props.description.slice(0, 100) + '...'
         : props.description;
     });
 
-    // Función para navegar a la página especificada
     const goToPage = () => {
       if (props.isActive) {
         router.push(props.link); // Navega a la ruta especificada
