@@ -54,7 +54,7 @@ export const CreenciasLimitantesMock: IJourney = {
         {
           title: 'Bienvenida al curso',
           description: '',
-          audioLink: audiobienvenida,
+          audioLink: 'https://res.cloudinary.com/dyjx9cjat/video/upload/v1741295318/1.1.bienvenida_ufzldj.mp3',
           imageLink: imagebienvenida,
           podcastStage: 'enabled',
           order: 1,
