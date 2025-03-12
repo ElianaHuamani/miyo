@@ -1,6 +1,5 @@
 import { IJourney } from '@/services/backend/IJourney';
 
-import audiobienvenida from '@/assets/audio/journeys/crecimientopersonal/creenciaslimitantes/1.1.bienvenida.mp3';
 import imagebienvenida from '@/assets/images/journeys/crecimientopersonal/creenciaslimitantes/1.1.bienvenida.svg';
 import audioquesonlascreenciaslimitantes from '@/assets/audio/journeys/crecimientopersonal/creenciaslimitantes/1.2.quesoncreenciaslimitantes.mp3';
 import imagequesonlascreenciaslimitantes from '@/assets/images/journeys/crecimientopersonal/creenciaslimitantes/1.2.quesoncreenciaslimitantes.svg';
