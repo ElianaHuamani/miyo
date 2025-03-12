@@ -132,8 +132,8 @@ export default defineComponent({
 }
 
 .social-icon {
-  max-width: 20px;
-  max-height: 20px;
-  color: #767676;
+  max-width: 25px;
+  max-height: 25px;
 }
+
 </style>
