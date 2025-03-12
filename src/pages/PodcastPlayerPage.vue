@@ -38,7 +38,7 @@ import { defineComponent, ref, onMounted, onUnmounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Breadcrumb from '@/common/components/Breadcrumb.vue';
 import AudioCacheService from '@/services/cache/AudioCacheService';
-
+import { useMixpanelTracking } from '@/composables/useMixpanelTracking.ts';
 
 export default defineComponent({
   name: 'PodcastPlayerPage',
@@ -46,6 +46,7 @@ export default defineComponent({
     Breadcrumb,
   },
   setup() {
+    const { trackPageVisit } = useMixpanelTracking('PodcastPlayerPage');
     const route = useRoute();
     const router = useRouter();
 
@@ -82,7 +83,7 @@ export default defineComponent({
       ];
     };
 
-    // Función para cargar el audio usando el servicio de caché
+    //cargar el audio usando el servicio de caché
     const loadAudioWithCache = async (url: string) => {
       if (!url) return;
       
@@ -96,14 +97,11 @@ export default defineComponent({
         }
         
         // Iniciar la carga con el servicio de caché
-        console.log(`Cargando audio: ${url}`);
         const blob = await AudioCacheService.loadAudio(url);
         
         // Crear un URL de objeto a partir del blob
         const blobUrl = URL.createObjectURL(blob);
         audioSrc.value = blobUrl;
-        
-        console.log(`Audio cargado y listo para reproducir: ${blobUrl}`);
         
         // Si el elemento de audio ya existe, actualizar su src
         if (audioElement.value) {
@@ -334,6 +332,8 @@ export default defineComponent({
       setTimeout(() => {
         precacheNextPodcast();
       }, 5000); // Esperar 5 segundos para no interferir con la carga del podcast actual
+
+      trackPageVisit();
     });
 
     onUnmounted(() => {

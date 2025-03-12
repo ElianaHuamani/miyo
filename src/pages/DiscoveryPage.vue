@@ -15,8 +15,7 @@
           :isActive="card.isActive"
           :audioCount="card.audioCount"
           :timeValue="card.timeValue"
-          :isOurCreation="card.isOurCreation"
-          :creatorName="card.creatorName"
+          :creator="card.creator"
         />
       </Carousel>
     </section>
@@ -36,8 +35,7 @@
           :isActive="card.isActive"
           :audioCount="card.audioCount"
           :timeValue="card.timeValue"
-          :isOurCreation="card.isOurCreation"
-          :creatorName="card.creatorName"
+          :creator="card.creator"
         />
       </Carousel>
     </section>
@@ -50,6 +48,8 @@ import Carousel from '@/common/components/Carousel.vue';
 import Card from '@/common/components/Card.vue';
 import { finanzasSectionMock, crecimientoSectionMock  } from '@/mocks/DiscoveryCardsMock.ts';
 import { type ICard } from '@/services/backend/ICard.ts';
+import { useMixpanelTracking } from '@/composables/useMixpanelTracking.ts';
+
 
 export default defineComponent({
   name: 'DiscoveryPage',
@@ -58,6 +58,7 @@ export default defineComponent({
     Card
   },
   setup() {
+    const { trackPageVisit } = useMixpanelTracking('DiscoveryPage');
     // Creamos una referencia para los datos que serán cargados
     const section1Cards = ref<ICard[]>([]);
     const section2Cards = ref<ICard[]>([]);
@@ -79,13 +80,14 @@ export default defineComponent({
       });
     };
 
-    // Llamada simulada a la "API" cuando el componente se monta
     onMounted(async () => {
       section1Cards.value = await fetchSection1Cards();
       section2Cards.value = await fetchSection2Cards();
       localStorage.removeItem('podcastProgress');
       localStorage.removeItem('currentCourseId');
+      trackPageVisit();
     });
+
 
     return {
       section1Cards,

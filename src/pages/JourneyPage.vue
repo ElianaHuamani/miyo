@@ -65,7 +65,7 @@ import iconBlock from '@/assets/icons/icono-block.svg';
 import iconStar from '@/assets/icons/icono-start.svg';
 import iconPlay from '@/assets/icons/icono-play.svg';
 import Breadcrumb from '@/common/components/Breadcrumb.vue';
-
+import { useMixpanelTracking } from '@/composables/useMixpanelTracking.ts';
 
 export default defineComponent({
   name: 'JourneyPage',
@@ -73,6 +73,7 @@ export default defineComponent({
     Breadcrumb,
   },
   setup() {
+    const { trackPageVisit } = useMixpanelTracking('JourneyPage');
     const isLoading = ref(false); 
     const router = useRouter();
     const route = useRoute();
@@ -245,14 +246,14 @@ export default defineComponent({
      onMounted(async () => {
       isLoading.value = true;
       try {
-        // Primero, cargar los datos
         await fetchJourneyData();
         
-        // Luego inicializar el progreso solo si hay datos
         if (journeyData.value && journeyData.value.modules) {
           initializeProgress();
           applyProgress();  // Asegúrate de que esto ocurra después de initializeProgress
         }
+
+        trackPageVisit();
       } catch (error) {
         console.error("Error al cargar la página:", error);
       } finally {
