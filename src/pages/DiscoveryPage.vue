@@ -58,7 +58,7 @@ export default defineComponent({
     Card
   },
   setup() {
-    const { trackPageVisit } = useMixpanelTracking('DiscoveryPageTest');
+    const { trackPageVisit } = useMixpanelTracking('DiscoveryPage');
     // Creamos una referencia para los datos que serán cargados
     const section1Cards = ref<ICard[]>([]);
     const section2Cards = ref<ICard[]>([]);
