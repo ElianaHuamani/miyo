@@ -82,21 +82,21 @@ export const finanzasSectionMock : ICard[] = [
   ];
 
   export const crecimientoSectionMock : ICard[] = [
-    { 
-      title: 'Hackea tu mente: Desbloquea creencias limitantes', 
-      description: '', 
-      image: journeycrecimientopersonalcreenciaslimitantes, 
-      link: '/journey?course=crecimientopersonal-creencias-limitantes',
-      isActive: true,
-      timeValue: '60:15 min',
-      audioCount: 21,
-      creator: {
-        name: 'Victor Acosta',
-        isOur: true,
-        instagram: 'https://www.instagram.com/acostaruizvictor',
-        linkedin: 'https://www.linkedin.com/in/victoracostaruiz',
-      },
-    },
+    // { 
+    //   title: 'Hackea tu mente: Desbloquea creencias limitantes', 
+    //   description: '', 
+    //   image: journeycrecimientopersonalcreenciaslimitantes, 
+    //   link: '/journey?course=crecimientopersonal-creencias-limitantes',
+    //   isActive: false,
+    //   timeValue: '60:15 min',
+    //   audioCount: 21,
+    //   creator: {
+    //     name: 'Victor Acosta',
+    //     isOur: true,
+    //     instagram: 'https://www.instagram.com/acostaruizvictor',
+    //     linkedin: 'https://www.linkedin.com/in/victoracostaruiz',
+    //   },
+    // },
     { 
       title: 'Autoconocimiento y gestión emocional', 
       description: '', 
@@ -129,7 +129,7 @@ export const finanzasSectionMock : ICard[] = [
       image: journeycrecimientohabitos, 
       link: '',
       isActive: false,
-      timeValue: '13',
+      timeValue: '13min',
       audioCount: 18,
       creator: {
         name: 'Miyo',
