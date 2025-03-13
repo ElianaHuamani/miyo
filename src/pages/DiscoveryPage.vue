@@ -50,7 +50,6 @@ import { finanzasSectionMock, crecimientoSectionMock  } from '@/mocks/DiscoveryC
 import { type ICard } from '@/services/backend/ICard.ts';
 import { useMixpanelTracking } from '@/composables/useMixpanelTracking.ts';
 
-
 export default defineComponent({
   name: 'DiscoveryPage',
   components: {
@@ -58,12 +57,10 @@ export default defineComponent({
     Card
   },
   setup() {
-    const { trackPageVisit } = useMixpanelTracking('DiscoveryPage');
-    // Creamos una referencia para los datos que serán cargados
+    const { trackEvent } = useMixpanelTracking('DiscoveryPage');
     const section1Cards = ref<ICard[]>([]);
     const section2Cards = ref<ICard[]>([]);
 
-    // Función simulando una llamada a una API con Promise
     const fetchSection1Cards = async (): Promise<ICard[]> => {
       return new Promise(resolve => {
         setTimeout(() => {
@@ -85,9 +82,8 @@ export default defineComponent({
       section2Cards.value = await fetchSection2Cards();
       localStorage.removeItem('podcastProgress');
       localStorage.removeItem('currentCourseId');
-      trackPageVisit();
+      trackEvent('DiscoveryPageVisited');
     });
-
 
     return {
       section1Cards,

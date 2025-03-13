@@ -20,13 +20,6 @@ class MixpanelService {
         track_pageview: true
       });
     
-    //   console.log('Mixpanel Config:', {
-    //     token: MIXPANEL_TOKEN ? 'Token configurado' : 'Sin token',
-    //     environment: import.meta.env.VITE_VERCEL_ENV || 'local',
-    //     debug: MIXPANEL_DEBUG
-    //   });
-    
-
     // Genera o recupera un ID de usuario anónimo
     this.anonymousId = this.getOrCreateAnonymousId();
     this.identifyUser(this.anonymousId);
@@ -89,18 +82,6 @@ class MixpanelService {
     }
   }
 
-  // Método para rastrear páginas (útil en aplicaciones de una sola página)
-  trackPageView(pageName: string, properties: Record<string, any> = {}) {
-    try {
-      mixpanel.track('Page View', {
-        'Page Name': pageName,
-        ...properties,
-        'Anonymous ID': this.anonymousId
-      });
-    } catch (error) {
-      console.error('Error tracking page view:', error);
-    }
-  }
 }
 
 // Exporta una instancia singleton
