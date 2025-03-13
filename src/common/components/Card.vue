@@ -8,6 +8,7 @@
     @click="goToPage"
   />
     <div class="flex items-center mb-3">
+      <!-- Etiqueta "Creado por:" -->
       <span class="text-sm text-gray-600 mr-2">Creado por:</span>
       <div 
         :class="creator.isOur ? 'bg-blue-100 rounded-full px-3 py-1' : 'bg-purple-100 rounded-full px-3 py-1'"

@@ -85,6 +85,7 @@ export default defineComponent({
       trackEvent('DiscoveryPageVisited');
     });
 
+
     return {
       section1Cards,
       section2Cards
