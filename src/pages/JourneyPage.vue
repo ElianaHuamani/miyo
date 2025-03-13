@@ -73,7 +73,7 @@ export default defineComponent({
     Breadcrumb,
   },
   setup() {
-    const { trackPageVisit } = useMixpanelTracking('JourneyPage');
+    const { trackEvent } = useMixpanelTracking('JourneyPage');
     const isLoading = ref(false); 
     const router = useRouter();
     const route = useRoute();
@@ -95,6 +95,14 @@ export default defineComponent({
       
       return journeyData.value.modules.reduce((total, module) => {
         return total + module.podcasts.filter(podcast => podcast.podcastStage === 'completed').length;
+      }, 0);
+    });
+
+    const totalPodcastsCount = computed(() => {
+      if (!journeyData.value || !journeyData.value.modules) return 0;
+      
+      return journeyData.value.modules.reduce((total, module) => {
+        return total + module.podcasts.length;
       }, 0);
     });
 
@@ -177,22 +185,18 @@ export default defineComponent({
       });
     };
 
-    // Configuración de carga condicional con simulación de API
     const fetchJourneyData = async () => {
       isLoading.value = true;
-      
       const courseId = route.query.course as string;
       
       if (useMockData) {
         if (typeof courseId === 'string' && journeyMocks[courseId]) {
           journeyData.value = journeyMocks[courseId];
         } else {
-          // Si no hay courseId en la URL, usar el mock por defecto
           journeyData.value = ComoFuncionaElSistemaFinanieroJourneyMock;
         }
       } else {
         try {
-          // Aquí iría la llamada real a la API
           const response = await fetch('https://api.example.com/journey'); 
           if (!response.ok) throw new Error('Error al obtener los datos');
           journeyData.value = await response.json();
@@ -223,8 +227,6 @@ export default defineComponent({
     };
 
     const handlePodcastClick = (podcast: any, moduleIndex: number, podcastIndex: number) => {
-      
-      // Guarda el courseId actual en localStorage
       const courseId = route.query.course as string;
       if (courseId) {
         localStorage.setItem('currentCourseId', courseId);
@@ -250,10 +252,15 @@ export default defineComponent({
         
         if (journeyData.value && journeyData.value.modules) {
           initializeProgress();
-          applyProgress();  // Asegúrate de que esto ocurra después de initializeProgress
+          applyProgress();
         }
 
-        trackPageVisit();
+        trackEvent('JourneyPageVisited', {
+            'JourneyTitle': journeyData.value.journey,
+            'CompletedPodcasts': completedPodcastsCount.value,
+            'TotalPodcasts': totalPodcastsCount.value
+          });
+
       } catch (error) {
         console.error("Error al cargar la página:", error);
       } finally {

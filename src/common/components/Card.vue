@@ -6,13 +6,10 @@
     alt="Card Image" 
     class="w-full h-48 object-cover mb-4 rounded-lg cursor-pointer hover:opacity-90 transition" 
     @click="goToPage"
-  />   
-    <!-- Sección de creador y redes sociales -->
+  />
     <div class="flex items-center mb-3">
       <!-- Etiqueta "Creado por:" -->
       <span class="text-sm text-gray-600 mr-2">Creado por:</span>
-      
-      <!-- Badge SOLO para el nombre del creador (con fondo coloreado) -->
       <div 
         :class="creator.isOur ? 'bg-blue-100 rounded-full px-3 py-1' : 'bg-purple-100 rounded-full px-3 py-1'"
       >
@@ -22,7 +19,7 @@
         </span>
       </div>
       
-      <!-- Iconos de redes sociales (completamente separados, sin fondo) -->
+      <!-- Iconos de redes sociales -->
       <a v-if="creator.instagram && creator.instagram.trim() !== ''" 
          :href="creator.instagram" 
          target="_blank" 

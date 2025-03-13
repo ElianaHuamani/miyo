@@ -46,7 +46,7 @@ export default defineComponent({
     Breadcrumb,
   },
   setup() {
-    const { trackPageVisit } = useMixpanelTracking('PodcastPlayerPage');
+    const { trackEvent } = useMixpanelTracking('PodcastPlayerPage');
     const route = useRoute();
     const router = useRouter();
 
@@ -328,23 +328,20 @@ export default defineComponent({
         audioElement.value.addEventListener('ended', handleAudioEnded);
       }
 
-      // Precachear el siguiente podcast después de cargar el actual
       setTimeout(() => {
         precacheNextPodcast();
-      }, 5000); // Esperar 5 segundos para no interferir con la carga del podcast actual
+      }, 5000);
 
-      trackPageVisit();
+      trackEvent('PodcastPlayerPageVisited');
     });
 
     onUnmounted(() => {
       if (audioElement.value) {
         audioElement.value.removeEventListener('timeupdate', trackProgress);
         audioElement.value.removeEventListener('ended', handleAudioEnded);
-        // Eliminar cualquier otro event listener que pueda estar causando problemas
         audioElement.value.pause();
       }
 
-      // Limpiar cualquier URL de objeto al desmontar
       if (audioSrc.value && audioSrc.value.startsWith('blob:')) {
         URL.revokeObjectURL(audioSrc.value);
       }
