@@ -11,7 +11,7 @@ import journeycrecimientocomunicacion from '@/assets/images/coursecovers/journey
 import journeycrecimientohabitos from '@/assets/images/coursecovers/journey-crecimiento-habitos.svg';
 import journeycrecimientomentalidad from '@/assets/images/coursecovers/journey-crecimiento-mentalidad.svg';
 import journeycrecimientoproposito from '@/assets/images/coursecovers/journey-crecimiento-proposito.svg';
-import journeycrecimientopersonalcreenciaslimitantes from '@/assets/images/coursecovers/journey-crecimientopersonal-creenciaslimitantes.svg';
+//import journeycrecimientopersonalcreenciaslimitantes from '@/assets/images/coursecovers/journey-crecimientopersonal-creenciaslimitantes.svg';
 
 export const finanzasSectionMock : ICard[] = [
     { 
